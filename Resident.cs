@@ -21,4 +21,21 @@ public class Resident
     [Required(ErrorMessage = "Occupation status is required.")]
     [StringLength(30, MinimumLength = 2, ErrorMessage = "Occupation status must be between 2 and 30 characters.")]
     public required string OccupationStatus { get; set; } // Examples: Unemployed, Student, Employed, Retired
+    
+    protected Resident(int id, string firstName, string lastName, string passportNum, string occupationStatus)
+    {
+        Id = id;
+        FirstName = firstName;
+        LastName = lastName;
+        PassportNum = passportNum;
+        OccupationStatus = occupationStatus;
+    }
+    
+    protected Resident(int id, string firstName, string lastName, string occupationStatus)
+    {
+        Id = id;
+        FirstName = firstName;
+        LastName = lastName;
+        OccupationStatus = occupationStatus;
+    }
 }

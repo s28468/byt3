@@ -1,30 +1,25 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-public class Schedule
+public class Schedule (int id, DateTime startTime, DateTime endTime, int frequency)
 {
     [Required(ErrorMessage = "Id is required.")]
     [Range(1, int.MaxValue, ErrorMessage = "Id must be a positive number.")]
-    public required int Id { get; set; }
+    public required int Id { get; set; } = id;
 
     [Required(ErrorMessage = "Start time is required.")]
-    public required TimeSpan StartTime { get; set; }
+    public required DateTime StartTime { get; set; } = startTime;
 
     [Required(ErrorMessage = "End time is required.")]
     [CustomValidation(typeof(Schedule), nameof(ValidateEndTime))]
-    public required TimeSpan EndTime { get; set; }
+    public required DateTime EndTime { get; set; } = endTime;
 
     [Required(ErrorMessage = "Frequency is required.")]
     [Range(1, int.MaxValue, ErrorMessage = "Frequency must be a positive number.")]
-    public required int Frequency { get; set; }
+    public required int Frequency { get; set; } = frequency;
 
-    public static ValidationResult? ValidateEndTime(TimeSpan endTime, ValidationContext context)
+    public static ValidationResult? ValidateEndTime(DateTime endTime, ValidationContext context)
     {
         var instance = (Schedule)context.ObjectInstance;
-        if (endTime <= instance.StartTime)
-        {
-            return new ValidationResult("End time must be later than start time.");
-        }
-        return ValidationResult.Success;
+        return endTime <= instance.StartTime ? new ValidationResult("End time must be later than start time.") : ValidationResult.Success;
     }
 }
