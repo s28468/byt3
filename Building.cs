@@ -1,9 +1,8 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 public abstract class Building
 {
-    public const int TotalLevels = 20;
+    private const int TotalLevels = 20;
 
     [Required(ErrorMessage = "Id is required.")]
     [Range(1, int.MaxValue, ErrorMessage = "Id must be a positive number.")]
@@ -39,10 +38,6 @@ public abstract class Building
     public static ValidationResult? ValidateOccupied(int occupied, ValidationContext context)
     {
         var instance = (Building)context.ObjectInstance;
-        if (occupied > instance.Capacity)
-        {
-            return new ValidationResult("Occupied spaces cannot exceed capacity.");
-        }
-        return ValidationResult.Success;
+        return occupied > instance.Capacity ? new ValidationResult("Occupied spaces cannot exceed capacity.") : ValidationResult.Success;
     }
 }

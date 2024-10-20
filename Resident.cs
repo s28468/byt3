@@ -1,8 +1,10 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 public class Resident
 {
+    private static readonly List<Resident> _instances = [];
+    public static IReadOnlyList<Resident> Instances => _instances.AsReadOnly(); 
+    
     [Required(ErrorMessage = "Id is required.")]
     [Range(1, int.MaxValue, ErrorMessage = "Id must be a positive number.")]
     public required int Id { get; set; }
@@ -29,6 +31,8 @@ public class Resident
         LastName = lastName;
         PassportNum = passportNum;
         OccupationStatus = occupationStatus;
+        _instances.Add(this);
+        _ = Serializer<Resident>.SerializeObject(this);
     }
     
     protected Resident(int id, string firstName, string lastName, string occupationStatus)
@@ -37,5 +41,7 @@ public class Resident
         FirstName = firstName;
         LastName = lastName;
         OccupationStatus = occupationStatus;
+        _instances.Add(this);
+        _ = Serializer<Resident>.SerializeObject(this);
     }
 }
