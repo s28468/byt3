@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Project;
+namespace ConsoleApp;
 
 public abstract class Building
 {

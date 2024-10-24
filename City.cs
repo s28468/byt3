@@ -1,40 +1,51 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json;
-
-public class City
+﻿namespace byt3.Models
 {
-    private static readonly List<City> _instances = [];
-    public static IReadOnlyList<City> Instances => _instances.AsReadOnly();
-    
-    [Required(ErrorMessage = "Name is required.")]
-    [StringLength(100, MinimumLength = 2, ErrorMessage = "Name must be between 2 and 100 characters.")]
-    public string Name { get; set; }
 
-    [Required(ErrorMessage = "Date of founding is required.")]
-    [DataType(DataType.Date)]
-    [CustomValidation(typeof(City), nameof(ValidateDateOfFounding))]
-    public DateTime DateOfFounding { get; set; }
+    using System.ComponentModel.DataAnnotations;
+    using System.Text.Json;
 
-    [Required(ErrorMessage = "Area is required.")]
-    [Range(1, double.MaxValue, ErrorMessage = "Area must be greater than zero.")]
-    public double Area { get; set; }
-
-    [Required(ErrorMessage = "Population is required.")]
-    [Range(1, int.MaxValue, ErrorMessage = "Population must be a positive number.")]
-    public int Population { get; set; }
-    
-    public City(string name, DateTime dateOfFounding, double area, int population)
+    public class City
     {
-        Name = name;
-        DateOfFounding = dateOfFounding;
-        Area = area;
-        Population = population;
-        _instances.Add(this);
-        _ = Serializer<City>.SerializeObject(this);
-    }
+        private static readonly List<City> _instances = [];
+        public static IReadOnlyList<City> Instances => _instances.AsReadOnly();
 
-    public static ValidationResult? ValidateDateOfFounding(DateTime dateOfFounding, ValidationContext context)
-    {
-        return dateOfFounding > DateTime.Now ? new ValidationResult("Date of founding cannot be in the future.") : ValidationResult.Success;
+        [Required(ErrorMessage = "Name is required.")]
+        [StringLength(100, MinimumLength = 2, ErrorMessage = "Name must be between 2 and 100 characters.")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "Date of founding is required.")]
+        [DataType(DataType.Date)]
+        [CustomValidation(typeof(City), nameof(ValidateDateOfFounding))]
+        public DateTime DateOfFounding { get; set; }
+
+        [Required(ErrorMessage = "Area is required.")]
+        [Range(1, double.MaxValue, ErrorMessage = "Area must be greater than zero.")]
+        public double Area { get; set; }
+
+        [Required(ErrorMessage = "Population is required.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Population must be a positive number.")]
+        public int Population { get; set; }
+
+        public City(string name, DateTime dateOfFounding, double area, int population)
+        {
+            Name = name;
+            DateOfFounding = dateOfFounding;
+            Area = area;
+            Population = population;
+            _instances.Add(this);
+            _ = Serializer<City>.SerializeObject(this);
+        }
+
+        public static ValidationResult? ValidateDateOfFounding(DateTime dateOfFounding, ValidationContext context)
+        {
+            return dateOfFounding > DateTime.Now
+                ? new ValidationResult("Date of founding cannot be in the future.")
+                : ValidationResult.Success;
+        }
+        
+        public static void ClearInstances()
+        {
+            _instances.Clear();
+        }
     }
 }
