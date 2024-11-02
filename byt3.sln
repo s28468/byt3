@@ -3,24 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Models", "Models", "{E02D2BE8-0463-416F-AEC2-D59C1AD066A7}"
-	ProjectSection(SolutionItems) = preProject
-		Building.cs = Building.cs
-		City.cs = City.cs
-		Deal.cs = Deal.cs
-		Exported.cs = Exported.cs
-		Imported.cs = Imported.cs
-		ManMade.cs = ManMade.cs
-		Natural.cs = Natural.cs
-		PublicVehicle.cs = PublicVehicle.cs
-		RecreationalSpace.cs = RecreationalSpace.cs
-		Resident.cs = Resident.cs
-		Residential.cs = Residential.cs
-		Resource.cs = Resource.cs
-		Route.cs = Route.cs
-		Schedule.cs = Schedule.cs
-		Workplace.cs = Workplace.cs
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{D090646A-C9E8-4EEA-B24C-D0F541EAE400}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{F23B21BF-C2EE-4E85-ADF8-E5C6E5ED9E79}"
 EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
@@ -28,5 +13,19 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C71FE052-D2CE-4B01-91F0-196E170033CA}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F23B21BF-C2EE-4E85-ADF8-E5C6E5ED9E79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F23B21BF-C2EE-4E85-ADF8-E5C6E5ED9E79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F23B21BF-C2EE-4E85-ADF8-E5C6E5ED9E79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F23B21BF-C2EE-4E85-ADF8-E5C6E5ED9E79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D090646A-C9E8-4EEA-B24C-D0F541EAE400}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D090646A-C9E8-4EEA-B24C-D0F541EAE400}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D090646A-C9E8-4EEA-B24C-D0F541EAE400}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D090646A-C9E8-4EEA-B24C-D0F541EAE400}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 EndGlobal
