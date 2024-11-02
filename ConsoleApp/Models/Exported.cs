@@ -19,6 +19,8 @@ public class Exported: Resource
     [StringLength(50, ErrorMessage = "Export license must not exceed 50 characters.")]
     public string ExportLicense { get; set; }
     
+    public Exported(){}
+    
     public Exported(
         int id,
         string name,

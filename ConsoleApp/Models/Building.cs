@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 namespace ConsoleApp;
 
-public /*abstract*/ class Building: SerializableObject<Building>
+public abstract class Building: SerializableObject<Building>
 {
     private static readonly List<Building> _instances = [];
     public static IReadOnlyList<Building> Instances => _instances.AsReadOnly();

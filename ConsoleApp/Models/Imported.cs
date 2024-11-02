@@ -23,6 +23,8 @@ public class Imported: Resource
     [StringLength(200, MinimumLength = 5, ErrorMessage = "Storage address must be between 5 and 200 characters.")]
     public string StorageAddress { get; set; }
     
+    public Imported(){}
+    
     public Imported(
         int id,
         string name,

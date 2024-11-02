@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Xml.Serialization;
 
 namespace ConsoleApp;
 
@@ -10,7 +11,7 @@ public class City: SerializableObject<City>
     [Required(ErrorMessage = "Name is required.")]
     [StringLength(100, MinimumLength = 2, ErrorMessage = "Name must be between 2 and 100 characters.")]
     public string Name { get; set; }
-
+    
     [Required(ErrorMessage = "Date of founding is required.")]
     [DataType(DataType.Date)]
     [CustomValidation(typeof(City), nameof(ValidateDateOfFounding))]

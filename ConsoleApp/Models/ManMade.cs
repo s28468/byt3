@@ -15,6 +15,8 @@ public class ManMade: Resource
     [Range(1, int.MaxValue, ErrorMessage = "Lifespan must be a positive number.")]
     public required int Lifespan { get; set; } 
     
+    public ManMade(){}
+    
     public ManMade(
         int id,
         string name,

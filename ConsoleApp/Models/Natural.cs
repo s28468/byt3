@@ -19,6 +19,8 @@ public class Natural: Resource
     [DataType(DataType.Date)]
     [CustomValidation(typeof(Natural), nameof(ValidateExpirationDate))]
     public required DateTime ExpirationDate { get; set; }
+    
+    public Natural(){}
 
     public Natural(
         int id,

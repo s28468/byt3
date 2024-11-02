@@ -4,20 +4,21 @@ namespace ConsoleApp;
 
 public abstract class Serializer
 {
-    private const string Filename = "Instances.json";
+    private const string Filename = "Instances.xml";
     public static async Task ClearFile()
     {
+        if (File.Exists(Filename))
+        {
+            File.Delete(Filename); 
+        }
         await using var stream = File.Create(Filename);
     }
+
     
     public static async Task SerializeInstances()
     {
         await City.SerializeAll();
         await Deal.SerializeAll();
-    //    await Exported.SerializeAll();
-    //    await Imported.SerializeAll();
-     //   await ManMade.SerializeAll();
-   //     await Natural.SerializeAll();
         await PublicVehicle.SerializeAll();
         await RecreationalSpace.SerializeAll();
         await Resident.SerializeAll();
