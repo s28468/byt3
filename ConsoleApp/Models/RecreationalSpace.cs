@@ -10,8 +10,7 @@ public class RecreationalSpace : Building
     public required string Name { get; set; } 
 
     [Required(ErrorMessage = "Type is required.")]
-    [StringLength(50, MinimumLength = 2, ErrorMessage = "Type must be between 2 and 50 characters.")]
-    public required string Type { get; set; }
+    public required RecreationalSpaceType Type { get; set; }
 
     [Required(ErrorMessage = "Entry fee is required.")]
     [Range(0, double.MaxValue, ErrorMessage = "Entry fee must be a non-negative number.")]
@@ -21,15 +20,23 @@ public class RecreationalSpace : Building
     public required List<string> Facilities { get; set; }
     
     public RecreationalSpace(){}
-    
+
     [JsonConstructor]
-    public RecreationalSpace(string name, string type, decimal entreeFee, List<string> facilities)
-        
+    public RecreationalSpace(string name, RecreationalSpaceType type, decimal entryFee, List<string> facilities)
     {
         Name = name;
         Type = type;
-        EntryFee = entreeFee;
+        EntryFee = entryFee;
         Facilities = facilities; 
         _instances.Add(this);
     }
+}
+
+public enum RecreationalSpaceType
+{
+    Gym,
+    ThemePark,
+    SwimmingPool,
+    Cinema,
+    Stadium
 }

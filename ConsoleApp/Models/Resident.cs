@@ -2,7 +2,7 @@
 
 namespace ConsoleApp;
 
-public class Resident: SerializableObject<Resident>
+public class Resident : SerializableObject<Resident>
 {
     public static IReadOnlyList<Resident> Instances => _instances.AsReadOnly(); 
     
@@ -22,11 +22,11 @@ public class Resident: SerializableObject<Resident>
     public string? PassportNum { get; set; }
 
     [Required(ErrorMessage = "Occupation status is required.")]
-    [StringLength(30, MinimumLength = 2, ErrorMessage = "Occupation status must be between 2 and 30 characters.")]
-    public string OccupationStatus { get; set; } // Examples: Unemployed, Student, Employed, Retired
+    public OccupationStatusType OccupationStatus { get; set; } // Examples: Unemployed, Student, Employed, Retired
 
     public Resident() { }
-    public Resident(int id, string firstName, string lastName, string passportNum, string occupationStatus)
+    
+    public Resident(int id, string firstName, string lastName, string? passportNum, OccupationStatusType occupationStatus)
     {
         Id = id;
         FirstName = firstName;
@@ -36,7 +36,7 @@ public class Resident: SerializableObject<Resident>
         _instances.Add(this);
     }
     
-    protected Resident(int id, string firstName, string lastName, string occupationStatus)
+    public Resident(int id, string firstName, string lastName, OccupationStatusType occupationStatus)
     {
         Id = id;
         FirstName = firstName;
@@ -44,4 +44,12 @@ public class Resident: SerializableObject<Resident>
         OccupationStatus = occupationStatus;
         _instances.Add(this);
     }
+}
+
+public enum OccupationStatusType
+{
+    Unemployed,
+    Student,
+    Employed,
+    Retired
 }

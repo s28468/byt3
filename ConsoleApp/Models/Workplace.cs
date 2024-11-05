@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace ConsoleApp;
 
-public class Workplace: Building
+public class Workplace : Building
 {
     private const int WorkHours = 8;
 
@@ -12,17 +12,24 @@ public class Workplace: Building
     public string CompanyName { get; set; } 
 
     [Required(ErrorMessage = "Industry type is required.")]
-    [StringLength(50, MinimumLength = 2, ErrorMessage = "Industry type must be between 2 and 50 characters.")]
-    public string IndustryType { get; set; } 
+    public IndustryTypeEnum IndustryType { get; set; }
     
     public Workplace() { }
     
     [JsonConstructor]
-    protected Workplace(string companyName, string industryType)
+    protected Workplace(string companyName, IndustryTypeEnum industryType)
     {
         CompanyName = companyName;
         IndustryType = industryType;
         _instances.Add(this);
     }
-    
+}
+
+public enum IndustryTypeEnum
+{
+    Medical,
+    Manufacturing,
+    Education,
+    Technology,
+    Finance
 }
