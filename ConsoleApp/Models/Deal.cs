@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using ConsoleApp.Helpers;
 
 namespace ConsoleApp;
 

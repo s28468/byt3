@@ -1,7 +1,11 @@
 using System.Xml.Serialization;
 
  namespace ConsoleApp.Helpers;
-
+ 
+ [XmlInclude(typeof(Imported))]
+ [XmlInclude(typeof(Exported))]
+ [XmlInclude(typeof(ManMade))]
+ [XmlInclude(typeof(Natural))]
  public abstract class SerializableObject<T>
  {
      private static readonly string Filename = $"{typeof(T).Name}.xml";
@@ -69,7 +73,7 @@ using System.Xml.Serialization;
                  _instances = []; 
              }
              
-             ClearFile();
+             _ = ClearFile();
          }
          else
          {

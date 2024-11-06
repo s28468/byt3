@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
+using ConsoleApp.Helpers;
 
 namespace ConsoleApp;
 
-//[XmlRoot("Resource")]
 public class Resource: SerializableObject<Resource>
 {
     public static IReadOnlyList<Resource> Instances => _instances.AsReadOnly(); 

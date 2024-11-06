@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-namespace ConsoleApp;
+using ConsoleApp.Helpers;
+
+namespace ConsoleApp.Models;
 
 public abstract class Building: SerializableObject<Building>
 {
