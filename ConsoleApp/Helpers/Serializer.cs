@@ -1,48 +1,36 @@
-using System.Text.Json;
+using ConsoleApp.Models;
 
-namespace ConsoleApp;
-
-public abstract class Serializer
+namespace ConsoleApp.Helpers
 {
-    private const string Filename = "Instances.xml";
-    public static async Task ClearFile()
+    public abstract class Serializer
     {
-        if (File.Exists(Filename))
+        public static async Task SerializeInstances()
         {
-            File.Delete(Filename); 
+            await City.SerializeAll();
+            await Deal.SerializeAll();
+            await PublicVehicle.SerializeAll();
+            await RecreationalSpace.SerializeAll();
+            await Resident.SerializeAll();
+            await Residential.SerializeAll();
+            await Resource.SerializeAll();
+            await Route.SerializeAll();
+            await Schedule.SerializeAll();
+            await Workplace.SerializeAll();
         }
-        await using var stream = File.Create(Filename);
-    }
 
+        public static void LoadInstances()
+        {
+            City.LoadAll();
+            Deal.LoadAll();
+            PublicVehicle.LoadAll();
+            RecreationalSpace.LoadAll();
+            Resident.LoadAll();
+            Residential.LoadAll();
+            Resource.LoadAll();
+            Route.LoadAll();
+            Schedule.LoadAll();
+            Workplace.LoadAll();
+        }
+    }
     
-    public static async Task SerializeInstances()
-    {
-        await City.SerializeAll();
-        await Deal.SerializeAll();
-        await PublicVehicle.SerializeAll();
-        await RecreationalSpace.SerializeAll();
-        await Resident.SerializeAll();
-        await Residential.SerializeAll();
-        await Resource.SerializeAll();
-        await Route.SerializeAll();
-        await Schedule.SerializeAll();
-        await Workplace.SerializeAll();
-    }
-
-    public static async Task LoadInstances()
-    {
-        if (File.Exists(Filename))
-        {
-            await City.LoadAll();
-            await Deal.LoadAll();
-            await PublicVehicle.LoadAll();
-            await RecreationalSpace.LoadAll();
-            await Resident.LoadAll();
-            await Residential.LoadAll();
-            await Resource.LoadAll();
-            await Route.LoadAll();
-            await Schedule.LoadAll();
-            await Workplace.LoadAll();
-        }
-    }
 }
