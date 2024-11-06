@@ -1,5 +1,6 @@
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices.ComTypes;
 using ConsoleApp;
 
 namespace UnitTests;
@@ -10,6 +11,7 @@ public class Tests
 
     private TestBuilding _building;
     private Workplace _workplace;
+    private string Filename = "Instances.xml";
 
     //private string _tempFileName;
 
@@ -29,7 +31,7 @@ public class Tests
         
         //_tempFileName = $"{Guid.NewGuid()}.json";
         
-        await Serializer.ClearFile();
+        await Serializer.ClearFile(Filename);
         Deal._instances.Clear();
         PublicVehicle._instances.Clear();
         Building._instances.Clear();
@@ -61,27 +63,28 @@ public class Tests
         var deal2 = new Deal(2, DateTime.Now, DateTime.Now.AddDays(2));
 
         // Act
-        await Deal.SerializeAll();
+        await Deal.SerializeAll(Filename);
 
         // Assert
-        Assert.IsTrue(File.Exists("Instances.xml"));
+        Assert.IsTrue(File.Exists(Filename));
         Assert.IsTrue(new FileInfo("Instances.xml").Length > 0);
     }
     
     [Test]
     public async Task LoadAll_WithSerializedData_LoadsInstances()
     {
-        // Arrange
-        var deal = new Deal(1, DateTime.Now, DateTime.Now.AddDays(1));
-        await Deal.SerializeAll();
 
-        // Act
-        Deal._instances.Clear();
-        await Deal.LoadAll();
+        var deal1 = new Deal(1, DateTime.Now, DateTime.Now.AddMonths(1));
+        
+        await Deal.SerializeAll(Filename);
+        
+        await Deal.LoadAll(Filename);
 
         // Assert
-        //Assert.That(Deal._instances.Count, Is.EqualTo(1));
-        Assert.That(Deal._instances[0].Id, Is.EqualTo(deal.Id));
+        Assert.That(Deal._instances.Count, Is.EqualTo(1));
+        Console.WriteLine(Deal._instances);
+        //Assert.IsTrue(validationResults.Exists(v => v.ErrorMessage.Contains("Error loading instances.")));
+        //Assert.That(Deal._instances[0].Id, Is.EqualTo(deal1.Id));
     }
     
     [Test]
@@ -107,25 +110,25 @@ public class Tests
         var deal = new Deal(1, DateTime.Now, DateTime.Now.AddDays(1));
 
         // Act
-        await Serializer.SerializeInstances();
+        await Serializer.SerializeInstances(Filename);
 
         // Assert
-        Assert.IsTrue(File.Exists("Instances.xml"));
-        Assert.IsTrue(new FileInfo("Instances.xml").Length > 0);
+        Assert.IsTrue(File.Exists(Filename));
+        Assert.IsTrue(new FileInfo(Filename).Length > 0);
     }
     
     [Test]
     public async Task ClearFile_DeletesFileContent()
     {
         // Arrange
-        File.WriteAllText("Instances.xml", "Test content");
+        File.WriteAllText(Filename, "Test content");
 
         // Act
-        await Serializer.ClearFile();
+        await Serializer.ClearFile(Filename);
 
         // Assert
-        Assert.IsTrue(File.Exists("Instances.xml"));
-        Assert.That(new FileInfo("Instances.xml").Length, Is.EqualTo(0));
+        Assert.IsTrue(File.Exists(Filename));
+        Assert.That(new FileInfo(Filename).Length, Is.EqualTo(0));
     }
 
     #endregion

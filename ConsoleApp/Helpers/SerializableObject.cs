@@ -23,14 +23,14 @@ public abstract class SerializableObject;
 public abstract class SerializableObject<T> : SerializableObject where T : SerializableObject<T>
 {
     public static List<T> _instances = [];
-    private const string Filename = "Instances.xml";
+    //private const string Filename = "Instances.xml";
 
     public static Task<List<T>> GetAllInstances()
     {
         return Task.FromResult(_instances);
     }
 
-    public static async Task SerializeAll()
+    public static async Task SerializeAll(string filename)
     {
         if (_instances.Count == 0)
         {
@@ -46,16 +46,16 @@ public abstract class SerializableObject<T> : SerializableObject where T : Seria
         var serializer = new XmlSerializer(typeof(List<SerializableObject>), xRoot); 
         var combines = new List<SerializableObject>();
 
-        if (File.Exists(Filename) && new FileInfo(Filename).Length > 0)
+        if (File.Exists(filename) && new FileInfo(filename).Length > 0)
         {
-            using var reader = new StreamReader(Filename);
+            using var reader = new StreamReader(filename);
             var existing = (List<SerializableObject>)serializer.Deserialize(reader)!;
             combines.AddRange(existing);
         }
 
         combines.AddRange(_instances);
         
-        await using (var writer = new StreamWriter(Filename))
+        await using (var writer = new StreamWriter(filename))
         {
             serializer.Serialize(writer, combines);
         }
@@ -63,9 +63,9 @@ public abstract class SerializableObject<T> : SerializableObject where T : Seria
         _instances.Clear();
     }
 
-    public static Task LoadAll()
+    public static Task LoadAll(string filename)
     {
-        if (File.Exists(Filename) && new FileInfo(Filename).Length > 0)
+        if (File.Exists(filename) && new FileInfo(filename).Length > 0)
         {
             var xRoot = new XmlRootAttribute
             {
@@ -77,8 +77,9 @@ public abstract class SerializableObject<T> : SerializableObject where T : Seria
 
             try
             {
-                using var reader = new StreamReader(Filename);
+                using var reader = new StreamReader(filename);
                 var existing = (List<SerializableObject>)serializer.Deserialize(reader)!;
+                Console.WriteLine(existing);
                 _instances = existing as List<T> ?? []; 
             }
             catch (Exception ex)
@@ -89,6 +90,7 @@ public abstract class SerializableObject<T> : SerializableObject where T : Seria
         }
         else
         {
+            Console.WriteLine($"File {filename} does not exist");
             _instances = [];
         }
         

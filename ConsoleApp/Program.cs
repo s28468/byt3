@@ -5,7 +5,10 @@ public class Program
 {
     private static async Task Main(string[] args)
     {
-         await Serializer.LoadInstances();
+         await Serializer.LoadInstances("Instances.xml");
+         
+         Console.WriteLine(Deal._instances.Count);
+
          
          var city1 = new City("New York", DateTime.Today, 500000, 600);
          var deal1 = new Deal(1, DateTime.Now, DateTime.Now.AddMonths(1));
@@ -13,6 +16,8 @@ public class Program
          //var exported1 = new Exported(1, "ss", true, 1, 0, true, null, "fff", null, null);
           var imported1 = new Imported(2, "ss", true, 1, 0, true, null, "fff", null, null);
          
-         await Serializer.SerializeInstances();
+          
+         await Serializer.SerializeInstances("Instances.xml");
+         
     }
 }
