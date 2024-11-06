@@ -17,7 +17,7 @@ public class Workplace : Building
     public Workplace() { }
     
     [JsonConstructor]
-    protected Workplace(string companyName, IndustryTypeEnum industryType)
+    public Workplace(string companyName, IndustryTypeEnum industryType)
     {
         CompanyName = companyName;
         IndustryType = industryType;
