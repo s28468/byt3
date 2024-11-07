@@ -1,6 +1,7 @@
 using System.Xml.Serialization;
+using ConsoleApp.Models;
 
- namespace ConsoleApp.Helpers;
+namespace ConsoleApp.Helpers;
  
  [XmlInclude(typeof(Imported))]
  [XmlInclude(typeof(Exported))]
@@ -60,24 +61,34 @@ using System.Xml.Serialization;
              try
              {
                  using var reader = new StreamReader(Filename);
-                 var existing = (List<T>)serializer.Deserialize(reader);
                  
-                 if (existing != null)
+                 var existing = new List<T>();
+                 var deserializedList = (List<T>)serializer.Deserialize(reader);
+                 
+                 if (deserializedList != null)
                  {
-                     _instances.AddRange(existing);
+                     existing.AddRange(deserializedList); 
                  }
+                 
+                 if (typeof(T) == typeof(Resource))
+                 {
+                     Resource.SortSubclasses(existing.Cast<Resource>().ToList());
+                 }
+
+                 _instances.AddRange(existing);
              }
              catch (Exception ex)
              {
-                 Console.WriteLine($"Error loading instances: {ex.Message}");
-                 _instances = []; 
+                 Console.WriteLine($"Error while deserializing {typeof(T).Name}: {ex.Message}");
+                 _instances = [];
              }
              
              _ = ClearFile();
          }
          else
          {
-             _instances = []; 
+             _instances = [];
          }
      }
+
  }

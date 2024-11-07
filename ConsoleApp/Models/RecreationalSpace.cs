@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using ConsoleApp.Models;
 
-namespace ConsoleApp;
+namespace ConsoleApp.Models;
 
+[Serializable]
 public class RecreationalSpace : Building
 {
     [Required(ErrorMessage = "Name is required.")]

@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using ConsoleApp.Models;
 
-namespace ConsoleApp;
+namespace ConsoleApp.Models;
 
+[Serializable]
 public class Workplace : Building
 {
     private const int WorkHours = 8;

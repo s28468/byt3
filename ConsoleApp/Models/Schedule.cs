@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ConsoleApp.Helpers;
 
-namespace ConsoleApp;
+namespace ConsoleApp.Models;
 
+[Serializable]
 public class Schedule: SerializableObject<Schedule>
 {
     public static IReadOnlyList<Schedule> Instances => _instances.AsReadOnly(); 

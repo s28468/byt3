@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ConsoleApp;
+namespace ConsoleApp.Models;
 
+[Serializable]
 public class Exported: Resource
 {
     private static List<Exported> _instances = [];
@@ -40,9 +41,9 @@ public class Exported: Resource
         ExportLicense = exportLicense;
         _instances.Add(this);
     }
-    
-    public new static Task<List<Exported>> GetAllInstances()
+
+    public static void AddInstance(Exported resource)
     {
-        return Task.FromResult(_instances);
+        _instances.Add(resource);
     }
 }

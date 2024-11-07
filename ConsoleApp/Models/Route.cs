@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ConsoleApp.Helpers;
 
-namespace ConsoleApp;
+namespace ConsoleApp.Models;
 
+[Serializable]
 public class Route: SerializableObject<Route>
 {
     public static IReadOnlyList<Route> Instances => _instances.AsReadOnly(); 

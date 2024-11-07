@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ConsoleApp;
+namespace ConsoleApp.Models;
 
+[Serializable]
 public class Imported: Resource
 {
     private static List<Imported> _instances = [];
@@ -47,8 +48,8 @@ public class Imported: Resource
         _instances.Add(this);
     }
     
-    public new static Task<List<Imported>> GetAllInstances()
+    public static void AddInstance(Imported resource)
     {
-        return Task.FromResult(_instances);
-    } 
+        _instances.Add(resource);
+    }
 }

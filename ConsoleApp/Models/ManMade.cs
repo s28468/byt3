@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ConsoleApp;
+namespace ConsoleApp.Models;
 
+[Serializable]
 public class ManMade: Resource
 {
     private static List<ManMade> _instances = [];
@@ -35,8 +36,8 @@ public class ManMade: Resource
         _instances.Add(this);
     }
     
-    public new static Task<List<ManMade>> GetAllInstances()
+    public static void AddInstance(ManMade resource)
     {
-        return Task.FromResult(_instances);
-    } 
+        _instances.Add(resource);
+    }
 }

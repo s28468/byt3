@@ -4,6 +4,7 @@ using ConsoleApp.Helpers;
 namespace ConsoleApp.Models;
 
 
+[Serializable]
 public class City: SerializableObject<City>
 {
     public static IReadOnlyList<City> Instances => _instances.AsReadOnly();

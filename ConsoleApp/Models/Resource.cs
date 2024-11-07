@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.ComponentModel.DataAnnotations;
-using System.Xml.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
 using ConsoleApp.Helpers;
 
-namespace ConsoleApp;
+namespace ConsoleApp.Models;
 
+[Serializable]
 public class Resource: SerializableObject<Resource>
 {
     public static IReadOnlyList<Resource> Instances => _instances.AsReadOnly(); 
@@ -57,33 +56,26 @@ public class Resource: SerializableObject<Resource>
         _instances.Add(this);
     }
     
-     public new static Task LoadAll()
+    public static void SortSubclasses(List<Resource> resources)
     {
-        IEnumerable<Resource> loadedInstances = _instances;
         _instances.Clear();
-
-        foreach (var instance in loadedInstances)
+        foreach (var instance in resources)
         {
             switch (instance)
             {
-                case Exported exported:
-                    _instances.Add(exported);
+                case Exported exported: 
+                    Exported.AddInstance(exported);
                     break;
                 case Imported imported:
-                    _instances.Add(imported);
+                    Imported.AddInstance(imported);
                     break;
-                case ManMade manMade:
-                    _instances.Add(manMade);
+                case ManMade manMade: 
+                    ManMade.AddInstance(manMade);
                     break;
                 case Natural natural:
-                    _instances.Add(natural);
-                    break;
-                default:
-                    _instances.Add(instance);
+                    Natural.AddInstance(natural);
                     break;
             }
         }
-
-        return Task.CompletedTask;
     }
 }

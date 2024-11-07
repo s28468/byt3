@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ConsoleApp.Helpers;
 
-namespace ConsoleApp;
+namespace ConsoleApp.Models;
 
+[Serializable]
 public class Resident : SerializableObject<Resident>
 {
     public static IReadOnlyList<Resident> Instances => _instances.AsReadOnly(); 

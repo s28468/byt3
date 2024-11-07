@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ConsoleApp;
+namespace ConsoleApp.Models;
 
+[Serializable]
 public class Natural: Resource
 {
     private static readonly List<Natural> _instances = [];
@@ -46,8 +47,8 @@ public class Natural: Resource
         return expirationDate <= DateTime.Now ? new ValidationResult("Expiration date must be in the future.") : ValidationResult.Success;
     }
     
-    public new static Task<List<Natural>> GetAllInstances()
+    public static void AddInstance(Natural resource)
     {
-        return Task.FromResult(_instances);
-    } 
+        _instances.Add(resource);
+    }
 }

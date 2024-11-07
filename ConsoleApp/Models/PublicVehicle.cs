@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ConsoleApp.Helpers;
 
-namespace ConsoleApp;
+namespace ConsoleApp.Models;
 
+[Serializable]
 public class PublicVehicle : SerializableObject<PublicVehicle>
 {
     public static IReadOnlyList<PublicVehicle> Instances => _instances.AsReadOnly();
