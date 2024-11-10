@@ -17,7 +17,7 @@ namespace ConsoleApp.Helpers;
          return Task.FromResult(_instances);
      }
 
-     private static async Task ClearFile()
+     public static async Task ClearFile()
      {
          if (File.Exists(Filename))
          {

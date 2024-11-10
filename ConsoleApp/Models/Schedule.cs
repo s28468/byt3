@@ -11,22 +11,22 @@ public class Schedule: SerializableObject<Schedule>
     
     [Required(ErrorMessage = "Id is required.")]
     [Range(1, int.MaxValue, ErrorMessage = "Id must be a positive number.")]
-    public int Id { get; set; } 
+    public int? Id { get; set; } 
 
     [Required(ErrorMessage = "Start time is required.")]
-    public DateTime StartTime { get; set; }
+    public DateTime? StartTime { get; set; }
 
     [Required(ErrorMessage = "End time is required.")]
     [CustomValidation(typeof(Schedule), nameof(ValidateEndTime))]
-    public DateTime EndTime { get; set; } 
+    public DateTime? EndTime { get; set; } 
 
     [Required(ErrorMessage = "Frequency is required.")]
     [Range(1, int.MaxValue, ErrorMessage = "Frequency must be a positive number.")]
-    public int Frequency { get; set; } 
+    public int? Frequency { get; set; } 
     
     public Schedule(){}
 
-    protected Schedule(int id, DateTime startTime, DateTime endTime, int frequency)
+    public Schedule(int id, DateTime startTime, DateTime endTime, int frequency)
     {
         Id = id;
         StartTime = startTime;

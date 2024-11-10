@@ -9,14 +9,14 @@ public class Deal: SerializableObject<Deal>
     public static IReadOnlyList<Deal> Instances => _instances.AsReadOnly();
     
     [Required(ErrorMessage = "Id is required.")]
-    public int Id { get; set; } 
+    public int? Id { get; set; } 
 
     [Required(ErrorMessage = "Start date is required.")]
-    public DateTime StartDate { get; set; } 
+    public DateTime? StartDate { get; set; } 
 
     [Required(ErrorMessage = "End date is required.")]
     [CustomValidation(typeof(Deal), nameof(ValidateEndDate))]
-    public DateTime EndDate { get; set; }
+    public DateTime? EndDate { get; set; }
     
     public Deal() { }
 

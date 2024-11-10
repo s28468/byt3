@@ -24,7 +24,7 @@ public class Resident : SerializableObject<Resident>
     public string? PassportNum { get; set; }
 
     [Required(ErrorMessage = "Occupation status is required.")]
-    public OccupationStatusType OccupationStatus { get; set; } // Examples: Unemployed, Student, Employed, Retired
+    public OccupationStatusType? OccupationStatus { get; set; } // Examples: Unemployed, Student, Employed, Retired
 
     public Resident() { }
     

@@ -13,7 +13,7 @@ public class PublicVehicle : SerializableObject<PublicVehicle>
     public int Id { get; set; } 
 
     [Required(ErrorMessage = "Type is required.")]
-    public VehicleType Type { get; set; } // Example: Bus, Tram, Metro, etc.
+    public VehicleType? Type { get; set; } // Example: Bus, Tram, Metro, etc.
 
     [Required(ErrorMessage = "Capacity is required.")]
     [Range(1, int.MaxValue, ErrorMessage = "Capacity must be a positive number.")]
