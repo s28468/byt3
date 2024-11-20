@@ -20,6 +20,7 @@ public class Resident : SerializableObject<Resident>
     [StringLength(50, MinimumLength = 2, ErrorMessage = "Last name must be between 2 and 50 characters.")]
     public string LastName { get; set; }
 
+    [NoWhitespaces]
     [StringLength(20, ErrorMessage = "Passport number cannot exceed 20 characters.")]
     public string? PassportNum { get; set; }
 

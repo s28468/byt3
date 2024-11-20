@@ -17,6 +17,7 @@ public class RecreationalSpace : Building
     [Range(0, double.MaxValue, ErrorMessage = "Entry fee must be a non-negative number.")]
     public required decimal? EntryFee { get; set; }
 
+    [NoWhitespaces]
     [Required(ErrorMessage = "Facilities list is required.")]
     public required List<string>? Facilities { get; set; }
     

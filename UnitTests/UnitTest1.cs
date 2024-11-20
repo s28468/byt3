@@ -40,6 +40,60 @@ public class Tests
         // Route._instances.Clear();
         // Natural._instances.Clear();
     }
+    
+    #region EmptyStrings
+
+    [Test]
+    public void ImportedEmptyDesc()
+    {
+        int id = 1;
+        string name = "Sample Product";
+        bool availability = true;
+        decimal price = 100.0m;
+        int quantity = 50;
+        bool isExportable = true;
+        string importer = "Importer A";
+        string originCity = "City A";
+        string originCertificate = "Cert123";
+        string storageAddress = "123 Warehouse Street";
+        var imported = new Imported(id, name, availability, price, quantity, isExportable, importer, originCity, originCertificate, storageAddress, "");
+        var validationContext = new ValidationContext(imported);
+        var validationResults = new List<ValidationResult>();
+        bool isValid = Validator.TryValidateObject(imported, validationContext, validationResults, true);
+        Assert.That(isValid, Is.False);
+        Assert.IsTrue(validationResults.Exists(v => v.ErrorMessage == "Line cannot be empty or whitespace."));
+    }
+    
+    [Test]
+    public void ResidentPassNumEmpty()
+    {
+        var resident = new Resident(1, "John", "Doe", " ", OccupationStatusType.Employed);
+        var context = new ValidationContext(resident) { MemberName = nameof(Resident.OccupationStatus) };
+        var validationResults = new List<ValidationResult>();
+        var isValid = Validator.TryValidateObject(resident, context, validationResults, true);
+        Assert.That(isValid, Is.False);
+        Assert.IsTrue(validationResults.Exists(v => v.ErrorMessage != null && v.ErrorMessage.Contains("Line cannot be empty or whitespace.")));
+    }
+    
+    [Test]
+    public void RecreationalSpaceFacilitiesListEmpty()
+    {
+        var invalidFacilities = new List<string> { "Gym", "Pool", " ", "Parking" };
+        var recreationalSpace = new RecreationalSpace
+        {
+            Name = "Community Gym",
+            Type = RecreationalSpaceType.Gym,
+            EntryFee = 10.0m,
+            Facilities = invalidFacilities
+        };
+        var validationContext = new ValidationContext(recreationalSpace);
+        var validationResults = new List<ValidationResult>();
+        bool isValid = Validator.TryValidateObject(recreationalSpace, validationContext, validationResults, true);
+        Assert.That(isValid, Is.False);
+        Assert.IsTrue(validationResults.Exists(v => v.ErrorMessage == "List cannot contain an empty or whitespace string."));
+    }
+
+    #endregion
 
     #region Serializer
 
