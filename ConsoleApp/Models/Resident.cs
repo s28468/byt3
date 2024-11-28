@@ -6,8 +6,8 @@ namespace ConsoleApp.Models;
 [Serializable]
 public class Resident : SerializableObject<Resident>
 {
-    public static IReadOnlyList<Resident> Instances => _instances.AsReadOnly(); 
-    
+    public static IReadOnlyList<Resident> Instances => _instances.AsReadOnly();
+
     [Required(ErrorMessage = "Id is required.")]
     [Range(1, int.MaxValue, ErrorMessage = "Id must be a positive number.")]
     public int Id { get; set; }
@@ -27,9 +27,14 @@ public class Resident : SerializableObject<Resident>
     [Required(ErrorMessage = "Occupation status is required.")]
     public OccupationStatusType? OccupationStatus { get; set; } // Examples: Unemployed, Student, Employed, Retired
 
-    public Resident() { }
-    
-    public Resident(int id, string firstName, string lastName, string? passportNum, OccupationStatusType occupationStatus)
+    public Residential LivesIn { get; private set; } //get copy?
+
+    public Resident()
+    {
+    }
+
+    public Resident(int id, string firstName, string lastName, string? passportNum,
+        OccupationStatusType occupationStatus)
     {
         Id = id;
         FirstName = firstName;
@@ -38,7 +43,7 @@ public class Resident : SerializableObject<Resident>
         OccupationStatus = occupationStatus;
         _instances.Add(this);
     }
-    
+
     public Resident(int id, string firstName, string lastName, OccupationStatusType occupationStatus)
     {
         Id = id;
@@ -46,6 +51,30 @@ public class Resident : SerializableObject<Resident>
         LastName = lastName;
         OccupationStatus = occupationStatus;
         _instances.Add(this);
+    }
+    
+    // composition
+    public void AddLivesIn(Residential residential)
+    {
+        if (residential == null)
+            throw new ArgumentNullException(nameof(residential), "Residential building shouldn't be null.");
+
+        if (LivesIn != null!) return;
+        
+        LivesIn = new Residential(residential.UnitCount, residential.FloorCount)
+        {
+            Id = residential.Id,
+            Price = residential.Price,
+            OpeningLevel = residential.OpeningLevel,
+            CurrLevel = residential.CurrLevel,
+            Address = residential.Address,
+            Capacity = residential.Capacity,
+            Occupied = residential.Occupied,
+            UnitCount = residential.UnitCount,
+            FloorCount = residential.FloorCount
+        };
+        
+        residential.AddLivedInBy(this);
     }
 }
 
