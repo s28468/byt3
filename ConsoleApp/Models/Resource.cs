@@ -32,6 +32,9 @@ public class Resource: SerializableObject<Resource>
 
     public bool IsExportable { get; set; }
     
+    private List<Workplace> _createdBy { get; } = [];
+    public List<Workplace> CreatedBy => [.._createdBy];
+    
     public Resource() { }
     
     public Resource(int id, string name, string description, bool availability, decimal price, int quantity, bool isExportable)
@@ -55,6 +58,18 @@ public class Resource: SerializableObject<Resource>
         Quantity = quantity;
         IsExportable = isExportable;
         _instances.Add(this);
+    }
+
+    // aggregation
+    public void AddCreatedBy(Workplace workplace)
+    {
+        if (workplace == null)
+            throw new ArgumentNullException(nameof(workplace), "Workplace shouldn't be null.");
+
+        if (_createdBy.Contains(workplace)) return;
+        
+        _createdBy.Add(workplace);
+        workplace.AddCreated(this);
     }
     
     public static void SortSubclasses(List<Resource> resources)

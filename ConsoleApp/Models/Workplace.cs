@@ -14,15 +14,30 @@ public class Workplace : Building
 
     [Required(ErrorMessage = "Industry type is required.")]
     public IndustryTypeEnum IndustryType { get; set; }
-    
+
+    private List<Resource> _created = []; 
+
+    public List<Resource> Created => [.._created];
+
     public Workplace() { }
-    
-    [JsonConstructor]
+   
     public Workplace(string companyName, IndustryTypeEnum industryType)
     {
         CompanyName = companyName;
         IndustryType = industryType;
         _instances.Add(this);
+    }
+    
+    // aggregation
+    public void AddCreated(Resource resource)
+    {
+        if (resource == null) 
+            throw new ArgumentNullException(nameof(resource), "Resource shouldn't be null.");
+
+        if (_created.Contains(resource)) return;
+        
+        _created.Add(resource);
+        resource.AddCreatedBy(this);
     }
 }
 
