@@ -24,6 +24,9 @@ public class Schedule: SerializableObject<Schedule>
     [Range(1, int.MaxValue, ErrorMessage = "Frequency must be a positive number.")]
     public int? Frequency { get; set; } 
     
+    private List<PublicVehicle> _followedBy = [];
+    public List<PublicVehicle> FollowedBy => [.._followedBy];
+    
     public Schedule(){}
 
     public Schedule(int id, DateTime startTime, DateTime endTime, int frequency)
@@ -39,5 +42,16 @@ public class Schedule: SerializableObject<Schedule>
     {
         var instance = (Schedule)context.ObjectInstance;
         return endTime <= instance.StartTime ? new ValidationResult("End time must be later than start time.") : ValidationResult.Success;
+    }
+    
+    public void AddFollowedBy(PublicVehicle vehicle)
+    {
+        if (vehicle == null)
+            throw new ArgumentNullException(nameof(vehicle), "Public vehicle shouldn't be null.");
+
+        if (_followedBy.Contains(vehicle)) return;
+        
+        _followedBy.Add(vehicle);
+        vehicle.AddFollows(this);
     }
 }

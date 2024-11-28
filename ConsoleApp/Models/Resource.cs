@@ -32,7 +32,7 @@ public class Resource: SerializableObject<Resource>
 
     public bool IsExportable { get; set; }
     
-    private List<Workplace> _createdBy { get; } = [];
+    private List<Workplace> _createdBy = [];
     public List<Workplace> CreatedBy => [.._createdBy];
     
     public Resource() { }

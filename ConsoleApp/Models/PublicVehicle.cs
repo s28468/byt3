@@ -19,6 +19,9 @@ public class PublicVehicle : SerializableObject<PublicVehicle>
     [Range(1, int.MaxValue, ErrorMessage = "Capacity must be a positive number.")]
     public int Capacity { get; set; }
     
+    private List<Schedule> _follows = [];
+    public List<Schedule> Follows => [.._follows];
+    
     public PublicVehicle() { }
     
     public PublicVehicle(int id, VehicleType type, int capacity)
@@ -27,6 +30,18 @@ public class PublicVehicle : SerializableObject<PublicVehicle>
         Type = type;
         Capacity = capacity;
         _instances.Add(this);
+    }
+    
+    // aggregation
+    public void AddFollows(Schedule schedule)
+    {
+        if (schedule == null)
+            throw new ArgumentNullException(nameof(schedule), "Schedule shouldn't be null.");
+
+        if (_follows.Contains(schedule)) return;
+        
+        _follows.Add(schedule);
+        schedule.AddFollowedBy(this);
     }
 }
 
