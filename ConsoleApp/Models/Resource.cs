@@ -35,6 +35,9 @@ public class Resource: SerializableObject<Resource>
     private List<Workplace> _createdBy = [];
     public List<Workplace> CreatedBy => [.._createdBy];
     
+    private List<City> _tradedBy = [];
+    public List<City> TradedBy => [.._tradedBy];
+    
     public Resource() { }
     
     public Resource(int id, string name, string description, bool availability, decimal price, int quantity, bool isExportable)
@@ -70,6 +73,18 @@ public class Resource: SerializableObject<Resource>
         
         _createdBy.Add(workplace);
         workplace.AddCreated(this);
+    }
+    
+    // aggregation
+    public void AddTradedBy(City city)
+    {
+        if (city == null)
+            throw new ArgumentNullException(nameof(city), "City shouldn't be null.");
+
+        if (_tradedBy.Contains(city)) return;
+        
+        _tradedBy.Add(city);
+        city.AddTraded(this);
     }
     
     public static void SortSubclasses(List<Resource> resources)

@@ -41,11 +41,31 @@ public abstract class Building: SerializableObject<Building>
 
     public int FreePlaces => Capacity - Occupied;
     
+    public City IsPartOf { get; private set; }
+    
     protected Building() { }
 
     public static ValidationResult? ValidateOccupied(int occupied, ValidationContext context)
     {
         var instance = (Building)context.ObjectInstance;
         return occupied > instance.Capacity ? new ValidationResult("Occupied spaces cannot exceed capacity.") : ValidationResult.Success;
+    }
+    
+    public void AddIsPartOf(City city)
+    {
+        if (city == null)
+            throw new ArgumentNullException(nameof(city), "City shouldn't be null.");
+
+        if (IsPartOf != null!) return;
+
+        IsPartOf = new City
+        {
+            Name  = city.Name, 
+            DateOfFounding = city.DateOfFounding, 
+            Area = city.Area, 
+            Population = city.Population
+        };
+        
+        city.AddConsistsOf(this);
     }
 }

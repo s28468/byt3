@@ -28,6 +28,9 @@ public class Route: SerializableObject<Route>
     [Range(1, int.MaxValue, ErrorMessage = "Duration must be a positive number.")]
     public int Duration { get; set; } // Duration in minutes
     
+    private List<PublicVehicle> _followedBy = [];
+    public List<PublicVehicle> FollowedBy => [.._followedBy];
+    
     public Route() { }
     
     protected Route(int id, string startPoint, string endPoint, int stopCount, int duration)
@@ -38,5 +41,17 @@ public class Route: SerializableObject<Route>
         StopCount = stopCount;
         Duration = duration;
         _instances.Add(this);
+    }
+    
+    // composition
+    public void AddFollowedBy (PublicVehicle vehicle)
+    {
+        if (vehicle == null)
+            throw new ArgumentNullException(nameof(vehicle), "Vehicle shouldn't be null.");
+
+        if (_followedBy.Contains(vehicle)) return;
+        
+        _followedBy.Add(vehicle);
+        vehicle.AddHasRoute(this);
     }
 }

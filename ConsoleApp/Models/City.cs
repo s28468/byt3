@@ -26,6 +26,12 @@ public class City: SerializableObject<City>
     [Range(1, int.MaxValue, ErrorMessage = "Population must be a positive number.")]
     public int? Population { get; set; }
     
+    private List<Resource> _traded = [];
+    public List<Resource> Traded => [.._traded];
+    
+    private List<Building> _consistsOf = [];
+    public List<Building> ConsistsOf => [.._consistsOf];
+    
     public City() { }
     
     public City(string name, DateTime dateOfFounding, double area, int population)
@@ -40,5 +46,29 @@ public class City: SerializableObject<City>
     public static ValidationResult? ValidateDateOfFounding(DateTime dateOfFounding, ValidationContext context)
     {
         return dateOfFounding > DateTime.Now ? new ValidationResult("Date of founding cannot be in the future.") : ValidationResult.Success;
+    }
+
+    // aggregation
+    public void AddTraded(Resource resource)
+    {
+        if (resource == null)
+            throw new ArgumentNullException(nameof(resource), "Resource shouldn't be null.");
+
+        if (_traded.Contains(resource)) return;
+        
+        _traded.Add(resource);
+        resource.AddTradedBy(this);
+    }
+    
+    // composition
+    public void AddConsistsOf (Building building)
+    {
+        if (building == null)
+            throw new ArgumentNullException(nameof(building), "Building shouldn't be null.");
+
+        if (_consistsOf.Contains(building)) return;
+        
+        _consistsOf.Add(building);
+        building.AddIsPartOf(this);
     }
 }
