@@ -32,6 +32,9 @@ public class City: SerializableObject<City>
     private List<Building> _consistsOf = [];
     public List<Building> ConsistsOf => [.._consistsOf];
     
+    private List<Resource> _dealtResources = [];
+    public List<Resource> DealtResources => [.._dealtResources];
+    
     public City() { }
     
     public City(string name, DateTime dateOfFounding, double area, int population)
@@ -70,5 +73,19 @@ public class City: SerializableObject<City>
         
         _consistsOf.Add(building);
         building.AddIsPartOf(this);
+    }
+    
+    // with attribute/class
+    public void AddDealtResources (Resource resource)
+    {
+        if (resource == null)
+            throw new ArgumentNullException(nameof(resource), "Resource shouldn't be null.");
+
+        if (_dealtResources.Contains(resource)) return;
+
+        var d = new Deal(Deal.GetLastId(), DateTime.Now, DateTime.Now.AddDays(3));
+        
+        _dealtResources.Add(resource);
+        resource.AddTradedCity(this);
     }
 }

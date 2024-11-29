@@ -28,6 +28,11 @@ public class Deal: SerializableObject<Deal>
         _instances.Add(this);
     }
 
+    public static int GetLastId()
+    {
+        return Instances.Any() ? (int)Instances[^1].Id! : 0;
+    }
+
     public static ValidationResult? ValidateEndDate(DateTime endDate, ValidationContext context)
     {
         var instance = (Deal)context.ObjectInstance;

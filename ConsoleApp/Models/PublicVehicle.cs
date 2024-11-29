@@ -40,6 +40,12 @@ public class PublicVehicle : SerializableObject<PublicVehicle>
         if (schedule == null)
             throw new ArgumentNullException(nameof(schedule), "Schedule shouldn't be null.");
 
+        // check if schedules overlap
+        if (_follows.Any(existing => existing.StartTime < schedule.EndTime && schedule.StartTime < existing.EndTime))
+        {
+            throw new InvalidOperationException("Schedules shouldn't overlap.");
+        }
+
         if (_follows.Contains(schedule)) return;
         
         _follows.Add(schedule);
