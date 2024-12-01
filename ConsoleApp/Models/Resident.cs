@@ -1,11 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ConsoleApp.Helpers;
+using System.Collections.Generic;
 
 namespace ConsoleApp.Models;
 
 [Serializable]
 public class Resident : SerializableObject<Resident>
 {
+    private static List<Resident> _instances = new List<Resident>();
     public static IReadOnlyList<Resident> Instances => _instances.AsReadOnly();
 
     [Required(ErrorMessage = "Id is required.")]
@@ -30,6 +32,8 @@ public class Resident : SerializableObject<Resident>
     public Residential LivesIn { get; private set; } //get copy?
 
     public Resident Manager { get; private set; } // Reflexive association
+
+    private Dictionary<int, Workplace> _workplaces = new Dictionary<int, Workplace>(); // Qualified association
 
     public Resident()
     {
@@ -86,6 +90,22 @@ public class Resident : SerializableObject<Resident>
             throw new ArgumentNullException(nameof(manager), "Manager shouldn't be null.");
 
         Manager = manager;
+    }
+
+    // qualified association
+    public void AddWorkplace(int personalId, Workplace workplace)
+    {
+        if (workplace == null)
+            throw new ArgumentNullException(nameof(workplace), "Workplace shouldn't be null.");
+
+        if (_workplaces.ContainsKey(personalId)) return;
+
+        _workplaces.Add(personalId, workplace);
+    }
+
+    public Workplace? GetWorkplace(int personalId)
+    {
+        return _workplaces.ContainsKey(personalId) ? _workplaces[personalId] : null;
     }
 }
 

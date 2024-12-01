@@ -18,6 +18,7 @@ public class Workplace : Building
     private List<Resource> _created = []; 
 
     public List<Resource> Created => [.._created];
+    private Dictionary<int, Resident> _residents = new Dictionary<int, Resident>(); // Qualified association
 
     public Workplace() { }
    
@@ -38,6 +39,20 @@ public class Workplace : Building
         
         _created.Add(resource);
         resource.AddCreatedBy(this);
+    }
+    public void AddResident(int personalId, Resident resident)
+    {
+        if (resident == null)
+            throw new ArgumentNullException(nameof(resident), "Resident shouldn't be null.");
+
+        if (_residents.ContainsKey(personalId)) return;
+
+        _residents.Add(personalId, resident);
+    }
+
+    public Resident? GetResident(int personalId)
+    {
+        return _residents.ContainsKey(personalId) ? _residents[personalId] : null;
     }
 }
 
