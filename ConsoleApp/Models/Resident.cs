@@ -29,6 +29,8 @@ public class Resident : SerializableObject<Resident>
 
     public Residential LivesIn { get; private set; } //get copy?
 
+    public Resident Manager { get; private set; } // Reflexive association
+
     public Resident()
     {
     }
@@ -75,6 +77,15 @@ public class Resident : SerializableObject<Resident>
         };
         
         residential.AddLivedInBy(this);
+    }
+
+    // reflex association
+    public void SetManager(Resident manager)
+    {
+        if (manager == null)
+            throw new ArgumentNullException(nameof(manager), "Manager shouldn't be null.");
+
+        Manager = manager;
     }
 }
 
