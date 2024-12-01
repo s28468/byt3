@@ -35,6 +35,14 @@ public class Resident : SerializableObject<Resident>
 
     private Dictionary<int, Workplace> _workplaces = new Dictionary<int, Workplace>(); // Qualified association
 
+    public PublicVehicle? VehicleUsed { get; set; } // Basic association with PublicVehicle
+
+    private List<RecreationalSpace> _recreationalSpaces = new List<RecreationalSpace>(); // Basic association with RecreationalSpace
+    public IReadOnlyList<RecreationalSpace> RecreationalSpaces => _recreationalSpaces.AsReadOnly();
+
+    private City? _city; // Basic association with City
+    public City? City => _city;
+
     public Resident()
     {
     }
@@ -107,8 +115,29 @@ public class Resident : SerializableObject<Resident>
     {
         return _workplaces.ContainsKey(personalId) ? _workplaces[personalId] : null;
     }
-}
 
+    // basic association with RecreationalSpace
+    public void AddRecreationalSpace(RecreationalSpace recreationalSpace)
+    {
+        if (recreationalSpace == null)
+            throw new ArgumentNullException(nameof(recreationalSpace), "Recreational space shouldn't be null.");
+
+        if (_recreationalSpaces.Contains(recreationalSpace)) return;
+
+        _recreationalSpaces.Add(recreationalSpace);
+        recreationalSpace.AddResident(this); // Add reference to the resident in RecreationalSpace
+    }
+
+    // basic association with City
+    public void SetCity(City city)
+    {
+        if (city == null)
+            throw new ArgumentNullException(nameof(city), "City shouldn't be null.");
+
+        _city = city;
+        city.AddResident(this); // Add reference to the resident in City
+    }
+}
 public enum OccupationStatusType
 {
     Unemployed,

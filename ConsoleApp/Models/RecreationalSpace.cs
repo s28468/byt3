@@ -20,6 +20,9 @@ public class RecreationalSpace : Building
     [NoWhitespaces]
     [Required(ErrorMessage = "Facilities list is required.")]
     public required List<string>? Facilities { get; set; }
+
+    private List<Resident> _residents = new List<Resident>(); // Basic association with Resident
+    public IReadOnlyList<Resident> Residents => _residents.AsReadOnly();
     
     public RecreationalSpace(){}
 
@@ -31,6 +34,17 @@ public class RecreationalSpace : Building
         EntryFee = entryFee;
         Facilities = facilities; 
         _instances.Add(this);
+    }
+
+    // basic association with Resident
+    public void AddResident(Resident resident)
+    {
+        if (resident == null)
+            throw new ArgumentNullException(nameof(resident), "Resident shouldn't be null.");
+
+        if (_residents.Contains(resident)) return;
+
+        _residents.Add(resident);
     }
 }
 
