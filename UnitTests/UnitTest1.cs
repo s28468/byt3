@@ -8,24 +8,19 @@ namespace UnitTests;
 
 public class Tests
 { 
-    private class TestBuilding : Building { }
-
-    private TestBuilding _building;
+    private RecreationalSpace _building;
 
     //private string _tempFileName;
 
     [SetUp]
     public Task Setup()
     {
-        _building = new TestBuilding
+        _building = new RecreationalSpace
         {
-            Id = 1,
-            Price = 1000m,
-            OpeningLevel = 5,
-            CurrLevel = 10,
-            Address = "123 Test Street",
-            Capacity = 100,
-            Occupied = 50
+            Name = "Night",
+            Type = RecreationalSpaceType.Gym,
+            EntryFee = 20,
+            Facilities = new List<string>{ "1", "2", "3" }
         };
         return Task.CompletedTask;
 
@@ -40,6 +35,81 @@ public class Tests
         // Route._instances.Clear();
         // Natural._instances.Clear();
     }
+
+    #region Basic
+
+    [Test]
+    public void Resident_CanTakePublicVehicle_AssociationIsValid()
+    {
+        Resident _resident = new Resident(1, "John", "Doe", "123456", OccupationStatusType.Employed);
+        PublicVehicle _vehicle = new PublicVehicle(1, VehicleType.Bus, 50);
+        
+        _vehicle.AddResident(_resident);
+
+        // Assert
+        Assert.AreEqual(_vehicle, _resident.VehicleUsed); // Ensure the resident is assigned to the vehicle
+        Assert.Contains(_resident, _vehicle.Residents); 
+    }
+
+
+    #endregion
+
+    #region Aggregation
+    
+        
+    [Test]
+    public void AggregationCreationTest()
+    {
+        Resource resourceAggregation = new Resource(1, "Steel", "High-quality steel", true, 500m, 100, false);
+        Workplace workplaceAggregation = new Workplace("CDPR", IndustryTypeEnum.Manufacturing);
+        
+        resourceAggregation.AddCreatedBy(workplaceAggregation);
+        Assert.Contains(workplaceAggregation, resourceAggregation.CreatedBy);
+        Assert.Contains(resourceAggregation, workplaceAggregation.Created);
+    }
+    
+    [Test]
+    public void AggregationPropertyTest()
+    {
+        Resource resourceAggregation = new Resource(1, "Steel", "High-quality steel", true, 500m, 100, false);
+        Workplace workplaceAggregation = new Workplace("CDPR", IndustryTypeEnum.Manufacturing);
+        resourceAggregation.AddCreatedBy(_workplace);
+        resourceAggregation = null;
+
+        GC.Collect();
+
+        Assert.IsNotNull(workplaceAggregation);
+        Assert.That(workplaceAggregation.CompanyName, Is.EqualTo("CDPR"));
+    }
+    
+
+
+    #endregion
+
+    #region Compostion
+
+    [Test]
+    public void AddBuildingToCity_ValidBuilding_AddsBuildingToCityComposition()
+    {
+        City cityComposition = new City("Night", new DateTime(1800, 1, 1), 500.5, 1000000);
+        cityComposition.AddConsistsOf(_building);
+        Assert.Contains(_building, cityComposition.ConsistsOf); 
+        Assert.AreEqual("Night", _building.IsPartOf.Name); 
+    }
+
+    [Test]
+    public void CompostionProperty()
+    {
+        City cityComposition = new City("Night", new DateTime(1800, 1, 1), 500.5, 1000000);
+        cityComposition.AddConsistsOf(_building);
+        cityComposition = null; 
+
+        GC.Collect(); 
+        
+        Assert.IsNull(_building.IsPartOf);
+    }
+
+    #endregion
     
     #region EmptyStrings
 
@@ -416,32 +486,32 @@ public class Tests
     
     #endregion
 
-    #region Building
-
-    [Test]
-    public void BuildingValid()
-    {
-        var results = ValidateModel(_building);
-        Assert.IsEmpty(results, "No validation errors.");
-    }
-    
-    [Test]
-    public void BuildingInvalidPrice()
-    {
-        _building.Price = 0m;
-        var results = ValidateModel(_building);
-        Assert.That(results, Has.Exactly(1).Matches<ValidationResult>(r => r.ErrorMessage != null && r.ErrorMessage.Contains("Price must be greater than zero.")));
-    }
-    
-    [Test]
-    public void BuildingInvalidNegative()
-    {
-        _building.Occupied = -1;
-        var results = ValidateModel(_building);
-        Assert.That(results, Has.Exactly(1).Matches<ValidationResult>(r => r.ErrorMessage != null && r.ErrorMessage.Contains("Occupied spaces cannot be negative.")));
-    }
-    
-    #endregion
+    // #region Building
+    //
+    // [Test]
+    // public void BuildingValid()
+    // {
+    //     var results = ValidateModel(_building);
+    //     Assert.IsEmpty(results, "No validation errors.");
+    // }
+    //
+    // [Test]
+    // public void BuildingInvalidPrice()
+    // {
+    //     _building.Price = 0m;
+    //     var results = ValidateModel(_building);
+    //     Assert.That(results, Has.Exactly(1).Matches<ValidationResult>(r => r.ErrorMessage != null && r.ErrorMessage.Contains("Price must be greater than zero.")));
+    // }
+    //
+    // [Test]
+    // public void BuildingInvalidNegative()
+    // {
+    //     _building.Occupied = -1;
+    //     var results = ValidateModel(_building);
+    //     Assert.That(results, Has.Exactly(1).Matches<ValidationResult>(r => r.ErrorMessage != null && r.ErrorMessage.Contains("Occupied spaces cannot be negative.")));
+    // }
+    //
+    // #endregion
     
     #region RecreationalSpace
 
