@@ -35,8 +35,8 @@ public class Resource: SerializableObject<Resource>
     private List<Workplace> _createdBy = [];
     public List<Workplace> CreatedBy => [.._createdBy];
     
-    private List<City> _tradedBy = [];
-    public List<City> TradedBy => [.._tradedBy];
+   // private List<City> _tradedBy = [];
+   // public List<City> TradedBy => [.._tradedBy];
     
     private List<City> _tradedCities = [];
     public List<City> TradedCities => [.._tradedCities];
@@ -79,7 +79,7 @@ public class Resource: SerializableObject<Resource>
     }
     
     // aggregation
-    public void AddTradedBy(City city)
+   /* public void AddTradedBy(City city)
     {
         if (city == null)
             throw new ArgumentNullException(nameof(city), "City shouldn't be null.");
@@ -89,6 +89,7 @@ public class Resource: SerializableObject<Resource>
         _tradedBy.Add(city);
         city.AddTraded(this);
     }
+    */
     
     // with attribute/class
     public void AddTradedCity (City city)
