@@ -27,8 +27,8 @@ public class City : SerializableObject<City>
     [Range(1, int.MaxValue, ErrorMessage = "Population must be a positive number.")]
     public int? Population { get; set; }
 
-    private List<Resource> _traded = new List<Resource>();
-    public List<Resource> Traded => new List<Resource>(_traded);
+    //private List<Resource> _traded = new List<Resource>();
+    //public List<Resource> Traded => new List<Resource>(_traded);
 
     private List<Building> _consistsOf = new List<Building>();
     public List<Building> ConsistsOf => new List<Building>(_consistsOf);
@@ -60,7 +60,7 @@ public class City : SerializableObject<City>
     }
 
     // aggregation
-    public void AddTraded(Resource resource)
+   /* public void AddTraded(Resource resource)
     {
         if (resource == null)
             throw new ArgumentNullException(nameof(resource), "Resource shouldn't be null.");
@@ -70,6 +70,7 @@ public class City : SerializableObject<City>
         _traded.Add(resource);
         resource.AddTradedBy(this);
     }
+    */
 
     // composition
     public void AddConsistsOf(Building building)
