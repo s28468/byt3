@@ -94,8 +94,6 @@ public class Resource: SerializableObject<Resource>
         {
             _tradedIn.Add(deal);
         }
-        
-       
     }
     
     public static void SortSubclasses(List<Resource> resources)

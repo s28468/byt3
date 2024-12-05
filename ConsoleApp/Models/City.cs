@@ -69,6 +69,28 @@ public class City : SerializableObject<City>
         _consistsOf.Add(building);
         building.AddIsPartOf(this);
     }
+    
+    public void RemoveConsistsOf(Building building)
+    {
+        if (building == null)
+            throw new ArgumentNullException(nameof(building), "Building shouldn't be null.");
+
+        if (!_consistsOf.Contains(building)) return;
+
+        _consistsOf.Remove(building);
+        building.RemoveIsPartOf();
+    }
+    
+    public void ModifyConsistsOf(Building building1, Building building2)
+    {
+        if (building1 == null || building2 == null)
+            throw new ArgumentNullException(nameof(building1), "Building shouldn't be null.");
+
+        if (!_consistsOf.Contains(building1)) return;
+
+        RemoveConsistsOf(building1);
+        AddConsistsOf(building2);
+    }
 
     // with attribute/class
     public void AddDeal(Resource resource)
@@ -88,8 +110,6 @@ public class City : SerializableObject<City>
         {
             _created.Add(deal);
         }
-        
-        
     }
     
     // basic association with Resident

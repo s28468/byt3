@@ -25,7 +25,7 @@ public class Schedule: SerializableObject<Schedule>
     public int? Frequency { get; set; } 
     
     private List<PublicVehicle> _followedBy = [];
-    public List<PublicVehicle> FollowedBy => [.._followedBy];
+    public IReadOnlyList<PublicVehicle> FollowedBy => _followedBy.AsReadOnly();
     
     public Schedule(){}
 
@@ -44,6 +44,7 @@ public class Schedule: SerializableObject<Schedule>
         return endTime <= instance.StartTime ? new ValidationResult("End time must be later than start time.") : ValidationResult.Success;
     }
     
+    // aggregation
     public void AddFollowedBy(PublicVehicle vehicle)
     {
         if (vehicle == null)
@@ -54,4 +55,26 @@ public class Schedule: SerializableObject<Schedule>
         _followedBy.Add(vehicle);
         vehicle.AddFollows(this);
     }
+    public void RemoveFollowedBy(PublicVehicle vehicle)
+    {
+        if (vehicle == null)
+            throw new ArgumentNullException(nameof(vehicle), "Public vehicle shouldn't be null.");
+
+        if (!_followedBy.Contains(vehicle)) return;
+
+        _followedBy.Remove(vehicle);
+        vehicle.RemoveFollows(this);
+    }
+    
+    public void ModifyFollowedBy(PublicVehicle vehicle1, PublicVehicle vehicle2)
+    {
+        if (vehicle1 == null || vehicle2 == null)
+            throw new ArgumentNullException(nameof(vehicle1), "Vehicle shouldn't be null.");
+
+        if (!_followedBy.Contains(vehicle1)) return;
+
+        RemoveFollowedBy(vehicle1);
+        AddFollowedBy(vehicle2);
+    }
+    
 }

@@ -9,16 +9,14 @@ public class Program
 {
     private static Task Main(string[] args)
     {
-        var w1 = new Workplace("IT Company", IndustryTypeEnum.Technology)
-        {
-            Id = 1,
-            Price = 1000000m,
-            OpeningLevel = 0,
-            CurrLevel = 5,
-            Address = "123 Tech Lane, Silicon Valley",
-            Capacity = 500,
-            Occupied = 300
-        };
+        var w1 = new Workplace("IT Company", IndustryTypeEnum.Technology, 1,
+           1000000m,
+            0,
+            5,
+            "123 Tech Lane, Silicon Valley",
+           500,
+           300
+        );
         
         var r1 = new Imported(
             id: 1,
@@ -34,9 +32,48 @@ public class Program
             description: "A high-quality electronics widget."
         );
         
-        w1.AddCreated(r1);
-        r1.AddCreatedBy(w1);
-        Console.WriteLine(w1.Created.Count);
+        var residential = new Residential(100,  10,
+        1,
+             1000000m,
+             0,
+           5,
+            "123 Tech Lane, Silicon Valley",
+             500,
+            300
+        );
+        
+        
+        var resident = new Resident(
+            id: 1,
+            firstName: "John",
+            lastName: "Doe",
+            passportNum: "A123456789",
+            occupationStatus: OccupationStatusType.Employed
+        );
+        
+        var resident2 = new Resident(
+            id: 2,
+            firstName: "John",
+            lastName: "Doe",
+            passportNum: "A123456789",
+            occupationStatus: OccupationStatusType.Employed
+        );
+        
+        var city = new City("Metropolis",new DateTime(1850, 1, 1),789.12,1000000);
+        var resource = new Resource
+        {
+            Id = 1,
+            Name = "Gold",
+            Description = "Precious metal used for trading.",
+            Availability = true,
+            Price = 1500.75m,
+            Quantity = 100,
+            IsExportable = true
+        };
+        city.AddConsistsOf(w1);
+        city.ModifyConsistsOf(w1, residential);
+        Console.WriteLine(city.ConsistsOf.FirstOrDefault());
+        
         return Task.CompletedTask;
     }
 }

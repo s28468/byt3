@@ -20,11 +20,10 @@ public class Residential: Building
     public Residential() { }
     
     [JsonConstructor]
-    public Residential(int unitCount, int floorCount)
+    public Residential(int unitCount, int floorCount, int id, decimal price, int openingLevel, int currLevel, string address, int capacity, int occupied): base(id, price, openingLevel, currLevel, address, capacity, occupied)
     {
         UnitCount = unitCount;
         FloorCount = floorCount;
-        _instances.Add(this);
     }
     
     // composition (delete resident if delete this)

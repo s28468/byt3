@@ -6,6 +6,7 @@ namespace ConsoleApp.Models;
 public abstract class Building: SerializableObject<Building>
 {
     private static readonly List<Building> _instances = [];
+    
     public static IReadOnlyList<Building> Instances => _instances.AsReadOnly();
     
     private const int TotalLevels = 20;
@@ -41,9 +42,21 @@ public abstract class Building: SerializableObject<Building>
 
     public int FreePlaces => Capacity - Occupied;
     
-    public City IsPartOf { get; private set; }
+    public City? IsPartOf { get; private set; }
     
     protected Building() { }
+    
+    protected Building(int id, decimal price, int openingLevel, int currLevel, string address, int capacity, int occupied)
+    {
+        Id = id;
+        Price = price;
+        OpeningLevel = openingLevel;
+        CurrLevel = currLevel;
+        Address = address;
+        Capacity = capacity;
+        Occupied = occupied;
+        _instances.Add(this);
+    }
 
     public static ValidationResult? ValidateOccupied(int occupied, ValidationContext context)
     {
@@ -51,6 +64,7 @@ public abstract class Building: SerializableObject<Building>
         return occupied > instance.Capacity ? new ValidationResult("Occupied spaces cannot exceed capacity.") : ValidationResult.Success;
     }
     
+    // composition
     public void AddIsPartOf(City city)
     {
         if (city == null)
@@ -61,5 +75,24 @@ public abstract class Building: SerializableObject<Building>
         IsPartOf = city;
         
         city.AddConsistsOf(this);
+    }
+    
+    public void RemoveIsPartOf()
+    {
+        if (IsPartOf == null) return;
+        
+        var temp = IsPartOf;
+        IsPartOf = null;
+
+        temp.RemoveConsistsOf(this);
+    }
+    
+    public void ModifyIsPartOf(City city)
+    {
+        if (city == null)
+            throw new ArgumentNullException(nameof(city), "City shouldn't be null.");
+       
+        RemoveIsPartOf();
+        AddIsPartOf(city);
     }
 }

@@ -22,13 +22,12 @@ public class Workplace : Building
 
     public Workplace() { }
    
-    public Workplace(string companyName, IndustryTypeEnum industryType)
+    public Workplace(string companyName, IndustryTypeEnum industryType, int id, decimal price, int openingLevel, int currLevel, string address, int capacity, int occupied): base(id, price, openingLevel, currLevel, address, capacity, occupied)
     {
         CompanyName = companyName;
         IndustryType = industryType;
-        _instances.Add(this);
     }
-    
+
     // aggregation
     public void AddCreated(Resource resource)
     {

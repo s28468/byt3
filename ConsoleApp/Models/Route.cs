@@ -54,4 +54,26 @@ public class Route: SerializableObject<Route>
         _followedBy.Add(vehicle);
         vehicle.AddHasRoute(this);
     }
+    
+    public void RemoveFollowedBy (PublicVehicle vehicle)
+    {
+        if (vehicle == null)
+            throw new ArgumentNullException(nameof(vehicle), "Vehicle shouldn't be null.");
+
+        if (!_followedBy.Contains(vehicle)) return;
+
+        _followedBy.Remove(vehicle);
+        vehicle.RemoveHasRoute();
+    }
+    
+    public void ModifyFollowedBy (PublicVehicle vehicle1, PublicVehicle vehicle2)
+    { 
+        if (vehicle1 == null || vehicle2 == null)
+            throw new ArgumentNullException(nameof(vehicle1), "Vehicle shouldn't be null.");
+
+        if (!_followedBy.Contains(vehicle1)) return;
+
+        RemoveFollowedBy(vehicle1);
+        AddFollowedBy(vehicle2);
+    }
 }

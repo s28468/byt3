@@ -27,13 +27,12 @@ public class RecreationalSpace : Building
     public RecreationalSpace(){}
 
     [JsonConstructor]
-    public RecreationalSpace(string name, RecreationalSpaceType type, decimal entryFee, List<string> facilities)
+    public RecreationalSpace(string name, RecreationalSpaceType type, decimal entryFee, List<string> facilities,int id, decimal price, int openingLevel, int currLevel, string address, int capacity, int occupied): base(id, price, openingLevel, currLevel, address, capacity, occupied)
     {
         Name = name;
         Type = type;
         EntryFee = entryFee;
-        Facilities = facilities; 
-        _instances.Add(this);
+        Facilities = facilities;
     }
 
     // basic association with Resident
