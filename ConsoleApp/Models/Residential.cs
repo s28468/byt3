@@ -37,4 +37,26 @@ public class Residential: Building
         _livedInBy.Add(resident);
         resident.AddLivesIn(this);
     }
+    
+    public void RemoveLivedInBy(Resident resident)
+    {
+        if (resident == null)
+            throw new ArgumentNullException(nameof(resident), "Resident shouldn't be null.");
+
+        if (!_livedInBy.Contains(resident)) return;
+
+        _livedInBy.Remove(resident);
+        resident.RemoveLivesIn();
+    }
+    
+    public void ModifyLivedInBy(Resident resident1, Resident resident2)
+    { 
+        if (resident1 == null || resident2 == null)
+            throw new ArgumentNullException(nameof(resident1), "Resident shouldn't be null.");
+
+        if (!_livedInBy.Contains(resident1)) return;
+
+        RemoveLivedInBy(resident1);
+        AddLivedInBy(resident2);
+    }
 }

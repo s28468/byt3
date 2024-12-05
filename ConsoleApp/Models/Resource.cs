@@ -76,6 +76,28 @@ public class Resource: SerializableObject<Resource>
         workplace.AddCreated(this);
     }
     
+    public void RemoveCreatedBy(Workplace workplace)
+    {
+        if (workplace == null)
+            throw new ArgumentNullException(nameof(workplace), "Workplace shouldn't be null.");
+
+        if (!_createdBy.Contains(workplace)) return;
+
+        _createdBy.Remove(workplace);
+        workplace.RemoveCreated(this);
+    }
+    
+    public void ModifyCreatedBy(Workplace workplace1, Workplace workplace2)
+    { 
+        if (workplace1 == null || workplace2 == null)
+            throw new ArgumentNullException(nameof(workplace1), "Workplace shouldn't be null.");
+
+        if (!_createdBy.Contains(workplace1)) return;
+
+        RemoveCreatedBy(workplace1);
+        AddCreatedBy(workplace2);
+    }
+    
     // with attribute/class
     public void AddTradedIn(City city) 
     {

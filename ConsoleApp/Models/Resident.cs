@@ -29,7 +29,7 @@ public class Resident : SerializableObject<Resident>
     [Required(ErrorMessage = "Occupation status is required.")]
     public OccupationStatusType? OccupationStatus { get; set; } // Examples: Unemployed, Student, Employed, Retired
 
-    public Residential LivesIn { get; private set; }
+    public Residential? LivesIn { get; private set; }
 
     public Resident Manager { get; private set; } // Reflexive association
 
@@ -78,6 +78,31 @@ public class Resident : SerializableObject<Resident>
         LivesIn = residential;
         
         residential.AddLivedInBy(this);
+    }
+    
+    public void RemoveLivesIn()
+    {
+        if (LivesIn == null) return;
+        
+        var temp = LivesIn;
+        LivesIn = null;
+        
+       // remove manager
+       // remove qualified
+       // remove vehicle
+       // remove recreational spaces
+       // remove city
+
+        temp.RemoveLivedInBy(this);
+    }
+
+    public void ModifyLivesIn(Residential residential)
+    {
+        if (residential == null)
+            throw new ArgumentNullException(nameof(residential), "Residential shouldn't be null.");
+        
+        RemoveLivesIn();
+        AddLivesIn(residential);
     }
 
     // reflex association

@@ -39,6 +39,29 @@ public class Workplace : Building
         _created.Add(resource);
         resource.AddCreatedBy(this);
     }
+    
+    public void RemoveCreated(Resource resource)
+    {
+        if (resource == null)
+            throw new ArgumentNullException(nameof(resource), "Resource shouldn't be null.");
+
+        if (!_created.Contains(resource)) return;
+
+        _created.Remove(resource);
+        resource.RemoveCreatedBy(this);
+    }
+    
+    public void ModifyCreated(Resource resource1, Resource resource2)
+    { 
+        if (resource1 == null || resource2 == null)
+            throw new ArgumentNullException(nameof(resource1), "Resource shouldn't be null.");
+
+        if (!_created.Contains(resource1)) return;
+
+        RemoveCreated(resource1);
+        AddCreated(resource2);
+    }
+    
     public void AddResident(int personalId, Resident resident)
     {
         if (resident == null)
