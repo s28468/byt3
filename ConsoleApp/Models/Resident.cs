@@ -29,15 +29,15 @@ public class Resident : SerializableObject<Resident>
     [Required(ErrorMessage = "Occupation status is required.")]
     public OccupationStatusType? OccupationStatus { get; set; } // Examples: Unemployed, Student, Employed, Retired
 
-    public Residential LivesIn { get; private set; } //get copy?
+    public Residential LivesIn { get; private set; }
 
     public Resident Manager { get; private set; } // Reflexive association
 
-    private Dictionary<int, Workplace> _workplaces = new Dictionary<int, Workplace>(); // Qualified association
+    private Dictionary<int, Workplace> _workplaces = new(); // Qualified association
 
     public PublicVehicle? VehicleUsed { get; set; } // Basic association with PublicVehicle
 
-    private List<RecreationalSpace> _recreationalSpaces = new List<RecreationalSpace>(); // Basic association with RecreationalSpace
+    private List<RecreationalSpace> _recreationalSpaces = []; // Basic association with RecreationalSpace
     public IReadOnlyList<RecreationalSpace> RecreationalSpaces => _recreationalSpaces.AsReadOnly();
 
     private City? _city; // Basic association with City
@@ -74,19 +74,8 @@ public class Resident : SerializableObject<Resident>
             throw new ArgumentNullException(nameof(residential), "Residential building shouldn't be null.");
 
         if (LivesIn != null!) return;
-        
-        LivesIn = new Residential(residential.UnitCount, residential.FloorCount)
-        {
-            Id = residential.Id,
-            Price = residential.Price,
-            OpeningLevel = residential.OpeningLevel,
-            CurrLevel = residential.CurrLevel,
-            Address = residential.Address,
-            Capacity = residential.Capacity,
-            Occupied = residential.Occupied,
-            UnitCount = residential.UnitCount,
-            FloorCount = residential.FloorCount
-        };
+
+        LivesIn = residential;
         
         residential.AddLivedInBy(this);
     }

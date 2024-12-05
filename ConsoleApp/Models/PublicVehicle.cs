@@ -64,14 +64,7 @@ public class PublicVehicle : SerializableObject<PublicVehicle>
 
         if (HasRoute != null!) return;
 
-        HasRoute = new Route
-        {
-           Id = route.Id,
-           StartPoint = route.StartPoint,
-           Duration = route.Duration,
-           EndPoint = route.EndPoint,
-           StopCount = route.StopCount
-        };
+        HasRoute = route;
         
         route.AddFollowedBy(this);
     }

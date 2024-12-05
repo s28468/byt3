@@ -33,13 +33,11 @@ public class Resource: SerializableObject<Resource>
     public bool IsExportable { get; set; }
     
     private List<Workplace> _createdBy = [];
-    public List<Workplace> CreatedBy => [.._createdBy];
+    public IReadOnlyList<Workplace> CreatedBy => _createdBy.AsReadOnly();
     
-   // private List<City> _tradedBy = [];
-   // public List<City> TradedBy => [.._tradedBy];
-    
-    private List<City> _tradedCities = [];
-    public List<City> TradedCities => [.._tradedCities];
+    private List<Deal> _tradedIn = [];
+    public IReadOnlyList<Deal> TradedIn => _tradedIn.AsReadOnly();
+    private bool wasTradedIn = false;
     
     public Resource() { }
     
@@ -78,31 +76,26 @@ public class Resource: SerializableObject<Resource>
         workplace.AddCreated(this);
     }
     
-    // aggregation
-   /* public void AddTradedBy(City city)
-    {
-        if (city == null)
-            throw new ArgumentNullException(nameof(city), "City shouldn't be null.");
-
-        if (_tradedBy.Contains(city)) return;
-        
-        _tradedBy.Add(city);
-        city.AddTraded(this);
-    }
-    */
-    
     // with attribute/class
-    public void AddTradedCity (City city)
+    public void AddTradedIn(City city) 
     {
         if (city == null)
             throw new ArgumentNullException(nameof(city), "City shouldn't be null.");
 
-        if (_tradedCities.Contains(city)) return;
+        var deal = Deal.ExistsRecent(city, this);
         
-        var d = new Deal(Deal.GetLastId(), DateTime.Now, DateTime.Now.AddDays(3));
+        if (deal == null) //if recent deal doesn't exist
+        {
+            var newDeal = Deal.CreateDeal(city, this);
+            _tradedIn.Add(newDeal);
+            city.AddDeal(this); 
+        }
+        else // if exists but not added reverse connection
+        {
+            _tradedIn.Add(deal);
+        }
         
-        _tradedCities.Add(city);
-        city.AddDealtResources(this);
+       
     }
     
     public static void SortSubclasses(List<Resource> resources)

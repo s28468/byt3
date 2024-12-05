@@ -58,13 +58,7 @@ public abstract class Building: SerializableObject<Building>
 
         if (IsPartOf != null!) return;
 
-        IsPartOf = new City
-        {
-            Name  = city.Name, 
-            DateOfFounding = city.DateOfFounding, 
-            Area = city.Area, 
-            Population = city.Population
-        };
+        IsPartOf = city;
         
         city.AddConsistsOf(this);
     }

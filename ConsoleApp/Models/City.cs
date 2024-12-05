@@ -26,17 +26,16 @@ public class City : SerializableObject<City>
     [Required(ErrorMessage = "Population is required.")]
     [Range(1, int.MaxValue, ErrorMessage = "Population must be a positive number.")]
     public int? Population { get; set; }
+    
+    private List<Building> _consistsOf = [];
+    public IReadOnlyList<Building> ConsistsOf => _consistsOf.AsReadOnly();
 
-    //private List<Resource> _traded = new List<Resource>();
-    //public List<Resource> Traded => new List<Resource>(_traded);
+    private List<Deal> _created = [];
+    public IReadOnlyList<Deal> Created => _created.AsReadOnly();
 
-    private List<Building> _consistsOf = new List<Building>();
-    public List<Building> ConsistsOf => new List<Building>(_consistsOf);
-
-    private List<Resource> _dealtResources = new List<Resource>();
-    public List<Resource> DealtResources => new List<Resource>(_dealtResources);
-
-    private List<Resident> _residents = new List<Resident>(); // Basic association with Resident
+    private bool wasCreated = false;
+    
+    private List<Resident> _residents = []; // Basic association with Resident
     public IReadOnlyList<Resident> Residents => _residents.AsReadOnly();
 
     public City()
@@ -59,19 +58,6 @@ public class City : SerializableObject<City>
             : ValidationResult.Success;
     }
 
-    // aggregation
-   /* public void AddTraded(Resource resource)
-    {
-        if (resource == null)
-            throw new ArgumentNullException(nameof(resource), "Resource shouldn't be null.");
-
-        if (_traded.Contains(resource)) return;
-
-        _traded.Add(resource);
-        resource.AddTradedBy(this);
-    }
-    */
-
     // composition
     public void AddConsistsOf(Building building)
     {
@@ -85,19 +71,27 @@ public class City : SerializableObject<City>
     }
 
     // with attribute/class
-    public void AddDealtResources(Resource resource)
+    public void AddDeal(Resource resource)
     {
         if (resource == null)
             throw new ArgumentNullException(nameof(resource), "Resource shouldn't be null.");
-
-        if (_dealtResources.Contains(resource)) return;
-
-        var d = new Deal(Deal.GetLastId(), DateTime.Now, DateTime.Now.AddDays(3));
-
-        _dealtResources.Add(resource);
-        resource.AddTradedCity(this);
+        
+        var deal = Deal.ExistsRecent(this, resource);
+       
+        if (deal == null) //if recent deal doesn't exist
+        {
+            var newDeal = Deal.CreateDeal(this, resource);
+            _created.Add(newDeal); 
+            resource.AddTradedIn(this); 
+        }
+        else  // if exists but not added reverse connection
+        {
+            _created.Add(deal);
+        }
+        
+        
     }
-
+    
     // basic association with Resident
     public void AddResident(Resident resident)
     {
