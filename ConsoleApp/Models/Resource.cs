@@ -118,6 +118,31 @@ public class Resource: SerializableObject<Resource>
         }
     }
     
+    public void RemoveTradedIn(City city, bool isRecursive = false)
+    {
+        if (city == null)
+            throw new ArgumentNullException(nameof(city), "City shouldn't be null.");
+
+        if (isRecursive) return; 
+
+        foreach (var deal in _tradedIn.Where(deal => deal.CreatedBy == city).ToList())
+        {
+            Deal._instances.Remove(deal);
+            _tradedIn.Remove(deal);
+        }
+        
+        city.RemoveDeal(this, true);
+    }
+    
+    public void ModifyTradedIn(City city1, City city2) 
+    {
+        if (city1 == null || city2 == null)
+            throw new ArgumentNullException(nameof(city1), "City shouldn't be null.");
+        
+        RemoveTradedIn(city1);
+        AddTradedIn(city2);
+    }
+    
     public static void SortSubclasses(List<Resource> resources)
     {
         _instances.Clear();

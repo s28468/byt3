@@ -112,6 +112,31 @@ public class City : SerializableObject<City>
         }
     }
     
+    public void RemoveDeal(Resource resource, bool isRecursive = false)
+    {
+        if (resource == null)
+            throw new ArgumentNullException(nameof(resource), "Resource shouldn't be null.");
+
+        if (isRecursive) return; 
+
+        foreach (var deal in _created.Where(deal => deal.Traded == resource).ToList())
+        {
+            Deal._instances.Remove(deal);
+            _created.Remove(deal);
+        }
+        
+        resource.RemoveTradedIn(this, true);
+    }
+    
+    public void ModifyDeal(Resource resource1, Resource resource2) 
+    {
+        if (resource1 == null || resource2 == null)
+            throw new ArgumentNullException(nameof(resource1), "Resource shouldn't be null.");
+        
+        RemoveDeal(resource1);
+        AddDeal(resource2);
+    }
+    
     // basic association with Resident
     public void AddResident(Resident resident)
     {

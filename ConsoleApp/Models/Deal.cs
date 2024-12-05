@@ -35,7 +35,7 @@ public class Deal: SerializableObject<Deal>
 
     public static int GetLastId()
     {
-        return Instances.Any() ? (int)Instances[^1].Id! : 0;
+        return Instances.Any() ? (int)Instances[^1].Id! : 1;
     }
 
     public static ValidationResult? ValidateEndDate(DateTime endDate, ValidationContext context)
