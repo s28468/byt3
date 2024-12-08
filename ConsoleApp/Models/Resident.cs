@@ -147,6 +147,22 @@ public class Resident : SerializableObject<Resident>
         return _workplaces.ContainsKey(personalId) ? _workplaces[personalId] : null;
     }
 
+    public void RemoveWorkplace(int personalId)
+    {
+        if (!_workplaces.ContainsKey(personalId)) return;
+
+        _workplaces.Remove(personalId);
+    }
+
+    public void ModifyWorkplace(int personalId, Workplace newWorkplace)
+    {
+        if (newWorkplace == null)
+            throw new ArgumentNullException(nameof(newWorkplace), "New workplace shouldn't be null.");
+
+        RemoveWorkplace(personalId);
+        AddWorkplace(personalId, newWorkplace);
+    }
+
     // basic association with RecreationalSpace
     public void AddRecreationalSpace(RecreationalSpace recreationalSpace)
     {
