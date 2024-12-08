@@ -172,7 +172,24 @@ public class Resident : SerializableObject<Resident>
         if (_recreationalSpaces.Contains(recreationalSpace)) return;
 
         _recreationalSpaces.Add(recreationalSpace);
-        recreationalSpace.AddResident(this); // Add reference to the resident in RecreationalSpace
+        recreationalSpace.AddResident(this);
+    }
+
+    public void RemoveRecreationalSpace(RecreationalSpace recreationalSpace)
+    {
+        if (recreationalSpace == null || !_recreationalSpaces.Contains(recreationalSpace)) return;
+
+        _recreationalSpaces.Remove(recreationalSpace);
+        recreationalSpace.RemoveResident(this);
+    }
+
+    public void ModifyRecreationalSpace(RecreationalSpace oldSpace, RecreationalSpace newSpace)
+    {
+        if (newSpace == null)
+            throw new ArgumentNullException(nameof(newSpace), "New recreational space shouldn't be null.");
+
+        RemoveRecreationalSpace(oldSpace);
+        AddRecreationalSpace(newSpace);
     }
 
     // basic association with City
@@ -181,8 +198,27 @@ public class Resident : SerializableObject<Resident>
         if (city == null)
             throw new ArgumentNullException(nameof(city), "City shouldn't be null.");
 
+        if (_city == city) return;
+
         _city = city;
-        city.AddResident(this); // Add reference to the resident in City
+        city.AddResident(this);
+    }
+
+    public void RemoveCity()
+    {
+        if (_city == null) return;
+
+        _city.RemoveResident(this);
+        _city = null;
+    }
+
+    public void ModifyCity(City newCity)
+    {
+        if (newCity == null)
+            throw new ArgumentNullException(nameof(newCity), "New city shouldn't be null.");
+
+        RemoveCity();
+        SetCity(newCity);
     }
 }
 public enum OccupationStatusType

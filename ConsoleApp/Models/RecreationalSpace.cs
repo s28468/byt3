@@ -45,6 +45,22 @@ public class RecreationalSpace : Building
 
         _residents.Add(resident);
     }
+
+    public void RemoveResident(Resident resident)
+    {
+        if (resident == null || !_residents.Contains(resident)) return;
+
+        _residents.Remove(resident);
+    }
+
+    public void ModifyResident(Resident oldResident, Resident newResident)
+    {
+        if (newResident == null)
+            throw new ArgumentNullException(nameof(newResident), "New resident shouldn't be null.");
+
+        RemoveResident(oldResident);
+        AddResident(newResident);
+    }
 }
 
 public enum RecreationalSpaceType
