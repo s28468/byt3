@@ -114,6 +114,23 @@ public class Resident : SerializableObject<Resident>
         Manager = manager;
     }
 
+    public void RemoveManager()
+    {
+        if (Manager == null) return;
+
+        Manager = null;
+    }
+
+    public void ModifyManager(Resident newManager)
+    {
+        if (newManager == null)
+            throw new ArgumentNullException(nameof(newManager), "New manager shouldn't be null.");
+
+        RemoveManager();
+        SetManager(newManager);
+    }
+
+
     // qualified association
     public void AddWorkplace(int personalId, Workplace workplace)
     {
