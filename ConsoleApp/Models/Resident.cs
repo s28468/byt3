@@ -140,6 +140,7 @@ public class Resident : SerializableObject<Resident>
         if (_workplaces.ContainsKey(personalId)) return;
 
         _workplaces.Add(personalId, workplace);
+        workplace.AddResident(personalId, this);
     }
 
     public Workplace? GetWorkplace(int personalId)
@@ -150,7 +151,7 @@ public class Resident : SerializableObject<Resident>
     public void RemoveWorkplace(int personalId)
     {
         if (!_workplaces.ContainsKey(personalId)) return;
-
+        
         _workplaces.Remove(personalId);
     }
 

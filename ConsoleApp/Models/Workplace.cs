@@ -70,6 +70,15 @@ public class Workplace : Building
         if (_residents.ContainsKey(personalId)) return;
 
         _residents.Add(personalId, resident);
+        resident.AddWorkplace(personalId, this);
+    }
+    
+    public void RemoveResident(int personalId)
+    {
+        if (!_residents.ContainsKey(personalId)) 
+            throw new ArgumentNullException(nameof(personalId), "PersonalId does not exist.");
+        
+        _residents.Remove(personalId);
     }
 
     public Resident? GetResident(int personalId)

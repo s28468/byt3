@@ -18,8 +18,8 @@ public class Deal: SerializableObject<Deal>
     [CustomValidation(typeof(Deal), nameof(ValidateEndDate))]
     public DateTime? EndDate { get; set; }
     
-    public City CreatedBy { get; private set; }
-    public Resource Traded { get; private set; }
+    public City CreatedBy { get; set; }
+    public Resource Traded { get; set; }
     
     public Deal() { }
 
