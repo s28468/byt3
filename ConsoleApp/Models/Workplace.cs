@@ -28,7 +28,23 @@ public class Workplace : Building
         CompanyName = companyName;
         IndustryType = industryType;
     }
+    private List<Resident> _employees = new();
+    public IReadOnlyList<Resident> Employees => _employees.AsReadOnly();
 
+    public void AddEmployee(Resident employee)
+    {
+        if (employee == null)
+            throw new ArgumentNullException(nameof(employee), "Employee shouldn't be null.");
+
+        if (!_employees.Contains(employee))
+            _employees.Add(employee);
+    }
+
+    public void RemoveEmployee(Resident employee)
+    {
+        if (_employees.Contains(employee))
+            _employees.Remove(employee);
+    }
     // Aggregation
     public void AddCreated(Resource resource)
     {
