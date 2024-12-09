@@ -15,10 +15,11 @@ public class Workplace : Building
     [Required(ErrorMessage = "Industry type is required.")]
     public IndustryTypeEnum IndustryType { get; set; }
 
-    private List<Resource> _created = []; 
+    private List<Resource> _created = new(); 
 
-    public List<Resource> Created => [.._created];
-    private Dictionary<int, Resident> _residents = new Dictionary<int, Resident>(); // Qualified association
+    public List<Resource> Created => new List<Resource>(_created);
+    
+    private Dictionary<int, Resident> _residents = new(); 
 
     public Workplace() { }
    
@@ -28,7 +29,7 @@ public class Workplace : Building
         IndustryType = industryType;
     }
 
-    // aggregation
+    // Aggregation
     public void AddCreated(Resource resource)
     {
         if (resource == null) 
@@ -62,6 +63,7 @@ public class Workplace : Building
         AddCreated(resource2);
     }
     
+    // Qualified association with reverse connection
     public void AddResident(int personalId, Resident resident)
     {
         if (resident == null)
@@ -70,14 +72,18 @@ public class Workplace : Building
         if (_residents.ContainsKey(personalId)) return;
 
         _residents.Add(personalId, resident);
+
         resident.AddWorkplace(personalId, this);
     }
     
     public void RemoveResident(int personalId)
     {
         if (!_residents.ContainsKey(personalId)) 
-            throw new ArgumentNullException(nameof(personalId), "PersonalId does not exist.");
-        
+            throw new ArgumentException("PersonalId does not exist.", nameof(personalId));
+
+        var resident = _residents[personalId];
+        resident.RemoveWorkplace(personalId);
+
         _residents.Remove(personalId);
     }
 
@@ -85,6 +91,17 @@ public class Workplace : Building
     {
         return _residents.ContainsKey(personalId) ? _residents[personalId] : null;
     }
+
+    public void ModifyResident(int personalId, Resident newResident)
+    {
+        if (newResident == null)
+            throw new ArgumentNullException(nameof(newResident), "New resident shouldn't be null.");
+
+        RemoveResident(personalId);
+        AddResident(personalId, newResident);
+    }
+
+    public IReadOnlyList<Resident> Residents => _residents.Values.ToList();
 }
 
 public enum IndustryTypeEnum

@@ -105,18 +105,24 @@ public class Resident : SerializableObject<Resident>
         AddLivesIn(residential);
     }
 
-    // reflex association
+// reflex association with reverse connection
     public void SetManager(Resident manager)
     {
         if (manager == null)
             throw new ArgumentNullException(nameof(manager), "Manager shouldn't be null.");
 
+        Manager?.RemoveSubordinate(this);
+
         Manager = manager;
+
+        Manager.AddSubordinate(this);
     }
 
     public void RemoveManager()
     {
         if (Manager == null) return;
+
+        Manager.RemoveSubordinate(this);
 
         Manager = null;
     }
@@ -130,8 +136,23 @@ public class Resident : SerializableObject<Resident>
         SetManager(newManager);
     }
 
+    private List<Resident> _subordinates = new();
+    public IReadOnlyList<Resident> Subordinates => _subordinates.AsReadOnly();
 
-    // qualified association
+    private void AddSubordinate(Resident subordinate)
+    {
+        if (!_subordinates.Contains(subordinate))
+            _subordinates.Add(subordinate);
+    }
+
+    private void RemoveSubordinate(Resident subordinate)
+    {
+        if (_subordinates.Contains(subordinate))
+            _subordinates.Remove(subordinate);
+    }
+
+
+// qualified association with reverse connection
     public void AddWorkplace(int personalId, Workplace workplace)
     {
         if (workplace == null)
@@ -140,18 +161,18 @@ public class Resident : SerializableObject<Resident>
         if (_workplaces.ContainsKey(personalId)) return;
 
         _workplaces.Add(personalId, workplace);
-        workplace.AddResident(personalId, this);
-    }
 
-    public Workplace? GetWorkplace(int personalId)
-    {
-        return _workplaces.ContainsKey(personalId) ? _workplaces[personalId] : null;
+        workplace.AddEmployee(this);
     }
 
     public void RemoveWorkplace(int personalId)
     {
         if (!_workplaces.ContainsKey(personalId)) return;
-        
+
+        // Удаляем обратную связь
+        var workplace = _workplaces[personalId];
+        workplace.RemoveEmployee(this);
+
         _workplaces.Remove(personalId);
     }
 
@@ -163,6 +184,7 @@ public class Resident : SerializableObject<Resident>
         RemoveWorkplace(personalId);
         AddWorkplace(personalId, newWorkplace);
     }
+
 
     // basic association with RecreationalSpace
     public void AddRecreationalSpace(RecreationalSpace recreationalSpace)
