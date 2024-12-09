@@ -105,6 +105,8 @@ public class PublicVehicle : SerializableObject<PublicVehicle>
             RemoveFollows(schedule);
         }
 
+        _instances.Remove(this);
+
         temp.RemoveFollowedBy(this);
     }
     

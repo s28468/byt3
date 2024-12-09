@@ -83,6 +83,7 @@ public abstract class Building: SerializableObject<Building>
         
         var temp = IsPartOf;
         IsPartOf = null;
+        _instances.Remove(this);
 
         temp.RemoveConsistsOf(this);
     }
@@ -91,7 +92,6 @@ public abstract class Building: SerializableObject<Building>
     {
         if (city == null)
             throw new ArgumentNullException(nameof(city), "City shouldn't be null.");
-       
         RemoveIsPartOf();
         AddIsPartOf(city);
     }
