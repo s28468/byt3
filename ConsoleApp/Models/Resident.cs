@@ -35,7 +35,7 @@ public class Resident : SerializableObject<Resident>
 
     private Dictionary<int, Workplace> _workplaces = new(); // Qualified association
 
-    private List<PublicVehicle> _vehiclesUsed { get; set; } // Basic association with PublicVehicle
+    private List<PublicVehicle> _vehiclesUsed = []; // Basic association with PublicVehicle
     public IReadOnlyList<PublicVehicle> VehiclesUsed => _vehiclesUsed.AsReadOnly();
 
     private List<RecreationalSpace> _recreationalSpaces = []; // Basic association with RecreationalSpace
