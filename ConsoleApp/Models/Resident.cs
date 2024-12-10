@@ -120,7 +120,9 @@ public class Resident : SerializableObject<Resident>
     {
         if (manager == null)
             throw new ArgumentNullException(nameof(manager), "Manager shouldn't be null.");
-
+        if (manager == this)
+            throw new InvalidOperationException("A resident cannot be their own manager.");
+        
         Manager?.RemoveSubordinate(this);
 
         Manager = manager;
@@ -167,22 +169,15 @@ public class Resident : SerializableObject<Resident>
     {
         if (workplace == null)
             throw new ArgumentNullException(nameof(workplace), "Workplace shouldn't be null.");
-
         if (_workplaces.ContainsKey(personalId)) return;
-
         _workplaces.Add(personalId, workplace);
-
         workplace.AddEmployee(this);
     }
 
     public void RemoveWorkplace(int personalId)
     {
-        if (!_workplaces.ContainsKey(personalId)) return;
-
-        // Удаляем обратную связь
-        var workplace = _workplaces[personalId];
+        if (!_workplaces.TryGetValue(personalId, out var workplace)) return;
         workplace.RemoveEmployee(this);
-
         _workplaces.Remove(personalId);
     }
 
@@ -191,8 +186,17 @@ public class Resident : SerializableObject<Resident>
         if (newWorkplace == null)
             throw new ArgumentNullException(nameof(newWorkplace), "New workplace shouldn't be null.");
 
-        RemoveWorkplace(personalId);
-        AddWorkplace(personalId, newWorkplace);
+        if (_workplaces.TryGetValue(personalId, out var currentWorkplace))
+        {
+            currentWorkplace.RemoveEmployee(this);
+            _workplaces.Remove(personalId);
+        }
+        _workplaces.Add(personalId, newWorkplace);
+        newWorkplace.AddEmployee(this);
+    }
+    public Workplace? GetWorkplace(int personalId)
+    {
+        return _workplaces.TryGetValue(personalId, out var workplace) ? workplace : null;
     }
 
 
@@ -205,7 +209,7 @@ public class Resident : SerializableObject<Resident>
         if (_recreationalSpaces.Contains(recreationalSpace)) return;
 
         _recreationalSpaces.Add(recreationalSpace);
-        recreationalSpace.AddResident(this);
+        recreationalSpace.AddResident(this); 
     }
 
     public void RemoveRecreationalSpace(RecreationalSpace recreationalSpace)
@@ -213,7 +217,7 @@ public class Resident : SerializableObject<Resident>
         if (recreationalSpace == null || !_recreationalSpaces.Contains(recreationalSpace)) return;
 
         _recreationalSpaces.Remove(recreationalSpace);
-        recreationalSpace.RemoveResident(this);
+        recreationalSpace.RemoveResident(this); 
     }
 
     public void ModifyRecreationalSpace(RecreationalSpace oldSpace, RecreationalSpace newSpace)
@@ -221,9 +225,10 @@ public class Resident : SerializableObject<Resident>
         if (newSpace == null)
             throw new ArgumentNullException(nameof(newSpace), "New recreational space shouldn't be null.");
 
-        RemoveRecreationalSpace(oldSpace);
-        AddRecreationalSpace(newSpace);
+        RemoveRecreationalSpace(oldSpace); 
+        AddRecreationalSpace(newSpace);    
     }
+
 
     // basic association with City
     public void SetCity(City city)
@@ -233,8 +238,10 @@ public class Resident : SerializableObject<Resident>
 
         if (_city == city) return;
 
+        _city?.RemoveResident(this);
+
         _city = city;
-        city.AddResident(this);
+        _city.AddResident(this);
     }
 
     public void RemoveCity()
@@ -253,6 +260,7 @@ public class Resident : SerializableObject<Resident>
         RemoveCity();
         SetCity(newCity);
     }
+
     
     // Basic association with Public Vehicle
     public void AddVehicleUsed(PublicVehicle publicVehicle)

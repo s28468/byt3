@@ -79,7 +79,6 @@ public class Workplace : Building
         AddCreated(resource2);
     }
     
-    // Qualified association with reverse connection
     public void AddResident(int personalId, Resident resident)
     {
         if (resident == null)
@@ -89,23 +88,24 @@ public class Workplace : Building
 
         _residents.Add(personalId, resident);
 
-        resident.AddWorkplace(personalId, this);
+        if (resident.GetWorkplace(personalId) != this)
+            resident.AddWorkplace(personalId, this);
     }
-    
+
     public void RemoveResident(int personalId)
     {
-        if (!_residents.ContainsKey(personalId)) 
+        if (!_residents.TryGetValue(personalId, out var resident))
             throw new ArgumentException("PersonalId does not exist.", nameof(personalId));
 
-        var resident = _residents[personalId];
-        resident.RemoveWorkplace(personalId);
+        if (resident.GetWorkplace(personalId) == this)
+            resident.RemoveWorkplace(personalId);
 
         _residents.Remove(personalId);
     }
 
     public Resident? GetResident(int personalId)
     {
-        return _residents.ContainsKey(personalId) ? _residents[personalId] : null;
+        return _residents.TryGetValue(personalId, out var resident) ? resident : null;
     }
 
     public void ModifyResident(int personalId, Resident newResident)
@@ -113,9 +113,17 @@ public class Workplace : Building
         if (newResident == null)
             throw new ArgumentNullException(nameof(newResident), "New resident shouldn't be null.");
 
-        RemoveResident(personalId);
+        if (_residents.TryGetValue(personalId, out var currentResident))
+        {
+            if (currentResident.GetWorkplace(personalId) == this)
+                currentResident.RemoveWorkplace(personalId);
+
+            _residents.Remove(personalId);
+        }
+
         AddResident(personalId, newResident);
     }
+
 
     public IReadOnlyList<Resident> Residents => _residents.Values.ToList();
 }
