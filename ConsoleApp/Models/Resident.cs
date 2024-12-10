@@ -35,7 +35,8 @@ public class Resident : SerializableObject<Resident>
 
     private Dictionary<int, Workplace> _workplaces = new(); // Qualified association
 
-    public PublicVehicle? VehicleUsed { get; set; } // Basic association with PublicVehicle
+    private List<PublicVehicle> _vehiclesUsed { get; set; } // Basic association with PublicVehicle
+    public IReadOnlyList<PublicVehicle> VehiclesUsed => _vehiclesUsed.AsReadOnly();
 
     private List<RecreationalSpace> _recreationalSpaces = []; // Basic association with RecreationalSpace
     public IReadOnlyList<RecreationalSpace> RecreationalSpaces => _recreationalSpaces.AsReadOnly();
@@ -87,11 +88,20 @@ public class Resident : SerializableObject<Resident>
         var temp = LivesIn;
         LivesIn = null;
         
-       // remove manager
-       // remove qualified
-       // remove vehicle
-       // remove recreational spaces
-       // remove city
+      RemoveManager();
+      RemoveWorkplace(Id);
+       foreach (var recreationalSpace in _recreationalSpaces)
+       {
+           RemoveRecreationalSpace(recreationalSpace);
+       }
+       RemoveCity();
+       foreach (var vehicle in _vehiclesUsed)
+       {
+           RemoveVehicleUsed(vehicle);
+       }
+       RemoveCity();
+
+       _instances.Remove(this);
 
         temp.RemoveLivedInBy(this);
     }
@@ -220,6 +230,35 @@ public class Resident : SerializableObject<Resident>
 
         RemoveCity();
         SetCity(newCity);
+    }
+    
+    // Basic association with Public Vehicle
+    public void AddVehicleUsed(PublicVehicle publicVehicle)
+    {
+        if (publicVehicle == null)
+            throw new ArgumentNullException(nameof(publicVehicle), "PublicVehicle shouldn't be null.");
+
+        if (_vehiclesUsed.Contains(publicVehicle)) return;
+
+        _vehiclesUsed.Add(publicVehicle);
+        publicVehicle.AddResident(this);
+    }
+
+    public void RemoveVehicleUsed(PublicVehicle publicVehicle)
+    {
+        if (publicVehicle == null || !_vehiclesUsed.Contains(publicVehicle)) return;
+
+        _vehiclesUsed.Remove(publicVehicle);
+        publicVehicle.RemoveResident(this);
+    }
+
+    public void ModifyVehicleUsed (PublicVehicle oldVehicle, PublicVehicle newVehicle)
+    {
+        if (newVehicle == null || oldVehicle == null)
+            throw new ArgumentNullException(nameof(newVehicle), "New vehicle shouldn't be null.");
+
+        RemoveVehicleUsed(oldVehicle);
+        AddVehicleUsed(newVehicle);
     }
 }
 public enum OccupationStatusType

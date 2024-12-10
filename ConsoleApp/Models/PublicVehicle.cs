@@ -128,7 +128,7 @@ public class PublicVehicle : SerializableObject<PublicVehicle>
         if (_residents.Contains(resident)) return;
 
         _residents.Add(resident);
-        resident.VehicleUsed = this;
+        resident.AddVehicleUsed(this);
     }
 
     public void RemoveResident(Resident resident)
@@ -136,7 +136,7 @@ public class PublicVehicle : SerializableObject<PublicVehicle>
         if (resident == null || !_residents.Contains(resident)) return;
 
         _residents.Remove(resident);
-        resident.VehicleUsed = null;
+        resident.RemoveVehicleUsed(this);
     }
 
     public void ModifyResident(Resident oldResident, Resident newResident)
