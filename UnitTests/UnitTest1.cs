@@ -274,7 +274,7 @@ public class Tests
         workplace.AddResident(1, resident);
 
         Assert.That(workplace.GetResident(1), Is.EqualTo(resident));
-      //  Assert.That(resident.GetWorkplace(1), Is.EqualTo(workplace)); //reverse connection
+        Assert.That(resident.Workplaces.ContainsValue(workplace)); //reverse connection
     }
     
     [Test]
@@ -286,12 +286,11 @@ public class Tests
         workplace.AddResident(1, resident);
 
         Assert.That(workplace.GetResident(1), Is.EqualTo(resident));
-       // Assert.That(resident.GetWorkplace(1), Is.EqualTo(workplace)); //reverse connection
+        Assert.That(resident.Workplaces.ContainsValue(workplace)); //reverse connection
         
         resident.RemoveWorkplace(1);
         
-        //Assert.That(workplace.GetResident(1), Is.EqualTo(null)); //reverse connection
-     //   Assert.That(resident.GetWorkplace(1), Is.EqualTo(null)); 
+        Assert.IsEmpty(resident.Workplaces); //reverse connection
 
     }
     
@@ -304,14 +303,14 @@ public class Tests
         workplace.AddResident(1, resident);
 
         Assert.That(workplace.GetResident(1), Is.EqualTo(resident));
-       // Assert.That(resident.GetWorkplace(1), Is.EqualTo(workplace)); //reverse connection
+        Assert.That(resident.Workplaces.ContainsValue(workplace)); //reverse connection
         
         Workplace workplace2 = new Workplace();
         resident.ModifyWorkplace(1, workplace2);
         
         //Assert.That(workplace.GetResident(1), Is.EqualTo(null)); //reverse connection
         //Assert.That(workplace2.GetResident(1), Is.EqualTo(resident)); //reverse connection
-       // Assert.That(resident.GetWorkplace(1), Is.EqualTo(workplace2)); 
+        Assert.That(resident.Workplaces.ContainsValue(workplace2));
     }
     
     [Test]

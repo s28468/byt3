@@ -34,6 +34,7 @@ public class Resident : SerializableObject<Resident>
     public Resident Manager { get; private set; } // Reflexive association
 
     private Dictionary<int, Workplace> _workplaces = new(); // Qualified association
+    public Dictionary<int, Workplace> Workplaces => _workplaces;
 
     private List<PublicVehicle> _vehiclesUsed = []; // Basic association with PublicVehicle
     public IReadOnlyList<PublicVehicle> VehiclesUsed => _vehiclesUsed.AsReadOnly();
