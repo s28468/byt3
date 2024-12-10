@@ -94,7 +94,6 @@ public class Resident : SerializableObject<Resident>
        {
            RemoveRecreationalSpace(recreationalSpace);
        }
-       RemoveCity();
        foreach (var vehicle in _vehiclesUsed)
        {
            RemoveVehicleUsed(vehicle);
