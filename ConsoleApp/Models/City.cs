@@ -144,15 +144,22 @@ public class City : SerializableObject<City>
             throw new ArgumentNullException(nameof(resident), "Resident shouldn't be null.");
 
         if (!_residents.Contains(resident))
+        {
             _residents.Add(resident);
+            resident.SetCity(this); 
+        }
     }
+
 
     public void RemoveResident(Resident resident)
     {
         if (resident == null) return;
 
         if (_residents.Contains(resident))
+        {
             _residents.Remove(resident);
+            resident.RemoveCity(); 
+        }
     }
 
     public void ModifyResident(Resident oldResident, Resident newResident)
@@ -163,4 +170,5 @@ public class City : SerializableObject<City>
         RemoveResident(oldResident);
         AddResident(newResident);
     }
+
 }
