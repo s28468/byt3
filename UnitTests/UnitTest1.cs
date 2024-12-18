@@ -216,7 +216,7 @@ public class Tests
         resident.SetManager(supervisor);
 
         Assert.That(resident.Manager, Is.EqualTo(supervisor));
-        //reverse connection
+        Assert.That(supervisor.Subordinates.Contains(resident)); //reverse connection
     }
 
     [Test]
@@ -228,10 +228,12 @@ public class Tests
         resident.SetManager(supervisor);
 
         Assert.That(resident.Manager, Is.EqualTo(supervisor));
-
+        Assert.That(supervisor.Subordinates.Contains(resident)); //reverse connection
+        
         resident.RemoveManager();
 
         Assert.IsNull(resident.Manager);
+        Assert.IsEmpty(supervisor.Subordinates); //reverse connection
         //reverse connection
     }
 
@@ -244,14 +246,15 @@ public class Tests
         resident.SetManager(supervisor);
 
         Assert.That(resident.Manager, Is.EqualTo(supervisor));
-        //reverse connection
+        Assert.That(supervisor.Subordinates.Contains(resident)); //reverse connection
 
         Resident supervisor2 = new Resident(3, "Liiia", "Liiia", OccupationStatusType.Employed);
         resident.ModifyManager(supervisor2);
 
         Assert.That(resident.Manager, Is.EqualTo(supervisor2));
-
-        //reverse connection
+        Assert.That(supervisor2.Subordinates.Contains(resident)); //reverse connection
+        
+        Assert.IsEmpty(supervisor.Subordinates); //reverse connection
     }
 
     [Test]
@@ -308,8 +311,8 @@ public class Tests
         Workplace workplace2 = new Workplace();
         resident.ModifyWorkplace(1, workplace2);
         
-        //Assert.That(workplace.GetResident(1), Is.EqualTo(null)); //reverse connection
-        //Assert.That(workplace2.GetResident(1), Is.EqualTo(resident)); //reverse connection
+        Assert.IsEmpty(workplace.Employees); //reverse connection
+        Assert.That(workplace2.Employees.Contains(resident)); //reverse connection
         Assert.That(resident.Workplaces.ContainsValue(workplace2));
     }
     
