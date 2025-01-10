@@ -19,11 +19,11 @@ public class Deal: SerializableObject<Deal>
     public DateTime? EndDate { get; set; }
     
     public City CreatedBy { get; set; }
-    public Resource Traded { get; set; }
+    public IResource Traded { get; set; }
     
     public Deal() { }
 
-    public Deal(int id, DateTime startDate, DateTime endDate, City createdBy, Resource traded)
+    public Deal(int id, DateTime startDate, DateTime endDate, City createdBy, IResource traded)
     {
         Id = id;
         StartDate = startDate;
@@ -46,14 +46,19 @@ public class Deal: SerializableObject<Deal>
     }
 
     // deals will be generated every 30 minutes; no deals for same resources simultaneously may exist
-    public static Deal? ExistsRecent(City city, Resource resource)
+    public static Deal? ExistsRecent(City city, IResource resource)
     {
          return _instances.FirstOrDefault(d => d.CreatedBy == city && d.Traded == resource && d.StartDate >= DateTime.Now.AddMinutes(-30));
     }
 
-    public static Deal CreateDeal(City city, Resource resource)
+    public static Deal CreateDeal(City city, IResource resource)
     {
         return new Deal(GetLastId(), DateTime.Now, DateTime.Now.AddDays(3), city, resource);
+    }
+
+    public static void RemoveDeal(Deal deal)
+    {
+        _instances.Remove(deal);
     }
     
 }

@@ -32,8 +32,6 @@ public class City : SerializableObject<City>
 
     private List<Deal> _created = [];
     public IReadOnlyList<Deal> Created => _created.AsReadOnly();
-
-    private bool wasCreated = false;
     
     private List<Resident> _residents = []; // Basic association with Resident
     public IReadOnlyList<Resident> Residents => _residents.AsReadOnly();
@@ -93,7 +91,7 @@ public class City : SerializableObject<City>
     }
 
     // with attribute/class
-    public void AddDeal(Resource resource)
+    public void AddDeal(IResource resource)
     {
         if (resource == null)
             throw new ArgumentNullException(nameof(resource), "Resource shouldn't be null.");
@@ -112,7 +110,7 @@ public class City : SerializableObject<City>
         }
     }
     
-    public void RemoveDeal(Resource resource, bool isRecursive = false)
+    public void RemoveDeal(IResource resource, bool isRecursive = false)
     {
         if (resource == null)
             throw new ArgumentNullException(nameof(resource), "Resource shouldn't be null.");
@@ -128,7 +126,7 @@ public class City : SerializableObject<City>
         resource.RemoveTradedIn(this, true);
     }
     
-    public void ModifyDeal(Resource resource1, Resource resource2) 
+    public void ModifyDeal(IResource resource1, IResource resource2) 
     {
         if (resource1 == null || resource2 == null)
             throw new ArgumentNullException(nameof(resource1), "Resource shouldn't be null.");

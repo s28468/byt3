@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using ConsoleApp.Helpers;
 
 namespace ConsoleApp.Models;
 
@@ -15,9 +16,9 @@ public class Workplace : Building
     [Required(ErrorMessage = "Industry type is required.")]
     public IndustryTypeEnum IndustryType { get; set; }
 
-    private List<Resource> _created = new(); 
+    private List<IResource> _created = []; 
 
-    public List<Resource> Created => new List<Resource>(_created);
+    public List<IResource> Created => [.._created];
     
     private Dictionary<int, Resident> _residents = new(); 
 
@@ -46,7 +47,7 @@ public class Workplace : Building
             _employees.Remove(employee);
     }
     // Aggregation
-    public void AddCreated(Resource resource)
+    public void AddCreated(IResource resource)
     {
         if (resource == null) 
             throw new ArgumentNullException(nameof(resource), "Resource shouldn't be null.");
@@ -57,7 +58,7 @@ public class Workplace : Building
         resource.AddCreatedBy(this);
     }
     
-    public void RemoveCreated(Resource resource)
+    public void RemoveCreated(IResource resource)
     {
         if (resource == null)
             throw new ArgumentNullException(nameof(resource), "Resource shouldn't be null.");
@@ -68,7 +69,7 @@ public class Workplace : Building
         resource.RemoveCreatedBy(this);
     }
     
-    public void ModifyCreated(Resource resource1, Resource resource2)
+    public void ModifyCreated(IResource resource1, Resource resource2)
     { 
         if (resource1 == null || resource2 == null)
             throw new ArgumentNullException(nameof(resource1), "Resource shouldn't be null.");

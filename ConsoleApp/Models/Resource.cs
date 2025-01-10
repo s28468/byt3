@@ -4,7 +4,7 @@ using ConsoleApp.Helpers;
 namespace ConsoleApp.Models;
 
 [Serializable]
-public class Resource: SerializableObject<Resource>
+public class Resource: SerializableObject<Resource>, IResource
 {
     public static IReadOnlyList<Resource> Instances => _instances.AsReadOnly(); 
     
@@ -37,7 +37,6 @@ public class Resource: SerializableObject<Resource>
     
     private List<Deal> _tradedIn = [];
     public IReadOnlyList<Deal> TradedIn => _tradedIn.AsReadOnly();
-    private bool wasTradedIn = false;
     
     public Resource() { }
     
@@ -63,13 +62,28 @@ public class Resource: SerializableObject<Resource>
         IsExportable = isExportable;
         _instances.Add(this);
     }
-
+    
+    public static void SortSubclasses(List<Resource> resources)
+    {
+        _instances.Clear();
+        foreach (var instance in resources)
+        {
+            switch (instance)
+            {
+                case Exported exported: 
+                    Exported.AddInstance(exported);
+                    break;
+                case Imported imported:
+                    Imported.AddInstance(imported);
+                    break;
+            }
+        }
+    }
+    
     // aggregation
     public void AddCreatedBy(Workplace workplace)
     {
-        if (workplace == null)
-            throw new ArgumentNullException(nameof(workplace), "Workplace shouldn't be null.");
-
+        ((IResource)this).WorkplaceExists(workplace);
         if (_createdBy.Contains(workplace)) return;
         
         _createdBy.Add(workplace);
@@ -78,9 +92,8 @@ public class Resource: SerializableObject<Resource>
     
     public void RemoveCreatedBy(Workplace workplace)
     {
-        if (workplace == null)
-            throw new ArgumentNullException(nameof(workplace), "Workplace shouldn't be null.");
-
+        ((IResource)this).WorkplaceExists(workplace);
+        
         if (!_createdBy.Contains(workplace)) return;
 
         _createdBy.Remove(workplace);
@@ -89,11 +102,6 @@ public class Resource: SerializableObject<Resource>
     
     public void ModifyCreatedBy(Workplace workplace1, Workplace workplace2)
     { 
-        if (workplace1 == null || workplace2 == null)
-            throw new ArgumentNullException(nameof(workplace1), "Workplace shouldn't be null.");
-
-        if (!_createdBy.Contains(workplace1)) return;
-
         RemoveCreatedBy(workplace1);
         AddCreatedBy(workplace2);
     }
@@ -101,8 +109,7 @@ public class Resource: SerializableObject<Resource>
     // with attribute/class
     public void AddTradedIn(City city) 
     {
-        if (city == null)
-            throw new ArgumentNullException(nameof(city), "City shouldn't be null.");
+        ((IResource)this).CityExists(city);
 
         var deal = Deal.ExistsRecent(city, this);
         
@@ -120,8 +127,7 @@ public class Resource: SerializableObject<Resource>
     
     public void RemoveTradedIn(City city, bool isRecursive = false)
     {
-        if (city == null)
-            throw new ArgumentNullException(nameof(city), "City shouldn't be null.");
+        ((IResource)this).CityExists(city);
 
         if (isRecursive) return; 
 
@@ -136,33 +142,7 @@ public class Resource: SerializableObject<Resource>
     
     public void ModifyTradedIn(City city1, City city2) 
     {
-        if (city1 == null || city2 == null)
-            throw new ArgumentNullException(nameof(city1), "City shouldn't be null.");
-        
         RemoveTradedIn(city1);
         AddTradedIn(city2);
-    }
-    
-    public static void SortSubclasses(List<Resource> resources)
-    {
-        _instances.Clear();
-        foreach (var instance in resources)
-        {
-            switch (instance)
-            {
-                case Exported exported: 
-                    Exported.AddInstance(exported);
-                    break;
-                case Imported imported:
-                    Imported.AddInstance(imported);
-                    break;
-                case ManMade manMade: 
-                    ManMade.AddInstance(manMade);
-                    break;
-                case Natural natural:
-                    Natural.AddInstance(natural);
-                    break;
-            }
-        }
     }
 }

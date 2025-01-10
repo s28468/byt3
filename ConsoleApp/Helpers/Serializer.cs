@@ -13,6 +13,8 @@ namespace ConsoleApp.Helpers
             await Resident.SerializeAll();
             await Residential.SerializeAll();
             await Resource.SerializeAll();
+            await ManMade.SerializeAll();
+            await Natural.SerializeAll();
             await Route.SerializeAll();
             await Schedule.SerializeAll();
             await Workplace.SerializeAll();
@@ -27,6 +29,8 @@ namespace ConsoleApp.Helpers
             Resident.LoadAll();
             Residential.LoadAll();
             Resource.LoadAll();
+            ManMade.LoadAll();
+            Natural.LoadAll();
             Route.LoadAll();
             Schedule.LoadAll();
             Workplace.LoadAll();
