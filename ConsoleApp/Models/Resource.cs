@@ -32,6 +32,18 @@ public class Resource: SerializableObject<Resource>, IResource
 
     public bool IsExportable { get; set; }
     
+    // discriminator
+    public ResourceType Type { get; private set; } = ResourceType.None;
+
+    // Natural
+    public string? Origin { get; private set; }
+    public string? Producer { get; private set; }
+    public DateTime? ExpirationDate { get; private set; }
+
+    // ManMade
+    public string? Manufacturer { get; private set; }
+    public int? Lifespan { get; private set; }
+    
     private List<Workplace> _createdBy = [];
     public IReadOnlyList<Workplace> CreatedBy => _createdBy.AsReadOnly();
     
@@ -80,6 +92,27 @@ public class Resource: SerializableObject<Resource>, IResource
         }
     }
     
+    public void ChangeToNatural(string origin, string producer, DateTime expirationDate)
+    {
+        Type = ResourceType.Natural;
+        Origin = origin;
+        Producer = producer;
+        ExpirationDate = expirationDate;
+
+        Manufacturer = null;
+        Lifespan = null;
+    }
+
+    public void ChangeToManMade(string manufacturer, int lifespan)
+    {
+        Type = ResourceType.ManMade;
+        Manufacturer = manufacturer;
+        Lifespan = lifespan;
+
+        Origin = null;
+        Producer = null;
+        ExpirationDate = null;
+    }
     // aggregation
     public void AddCreatedBy(Workplace workplace)
     {
