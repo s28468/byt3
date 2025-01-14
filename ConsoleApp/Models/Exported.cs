@@ -41,6 +41,15 @@ public class Exported: Resource
         ExportLicense = exportLicense;
         _instances.Add(this);
     }
+    
+    public Exported(Resource resource, string exporter, string destinationCity, string exportLicense)
+        : base(resource.Id.Value, resource.Name, resource.Description, resource.Availability, resource.Price.Value, resource.Quantity.Value, resource.IsExportable)
+    {
+        Exporter = exporter;
+        DestinationCity = destinationCity;
+        ExportLicense = exportLicense;
+        _instances.Add(this);
+    }
 
     public static void AddInstance(Exported resource)
     {

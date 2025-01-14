@@ -48,6 +48,16 @@ public class Imported: Resource
         _instances.Add(this);
     }
     
+    public Imported(Resource resource, string importer, string originCity, string originCertificate, string storageAddress)
+        : base(resource.Id.Value, resource.Name, resource.Description, resource.Availability, resource.Price.Value, resource.Quantity.Value, resource.IsExportable)
+    {
+        Importer = importer;
+        OriginCity = originCity;
+        OriginCertificate = originCertificate;
+        StorageAddress = storageAddress;
+        _instances.Add(this);
+    }
+    
     public static void AddInstance(Imported resource)
     {
         _instances.Add(resource);
