@@ -113,6 +113,14 @@ public class Resource: SerializableObject<Resource>, IResource
         Producer = null;
         ExpirationDate = null;
     }
+    protected static void RemoveInstance(Resource resource)
+    {
+        if (_instances.Contains(resource))
+        {
+            _instances.Remove(resource);
+        }
+    }
+    
     // aggregation
     public void AddCreatedBy(Workplace workplace)
     {

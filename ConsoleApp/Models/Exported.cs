@@ -45,6 +45,7 @@ public class Exported: Resource
     public Exported(Resource resource, string exporter, string destinationCity, string exportLicense)
         : base(resource.Id.Value, resource.Name, resource.Description, resource.Availability, resource.Price.Value, resource.Quantity.Value, resource.IsExportable)
     {
+        RemoveInstance(resource);
         Exporter = exporter;
         DestinationCity = destinationCity;
         ExportLicense = exportLicense;
